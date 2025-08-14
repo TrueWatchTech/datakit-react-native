@@ -1,0 +1,44 @@
+#import "FTReactNativeSessionReplay.h"
+#import <FTMobileSDK/FTRumSessionReplay.h>
+#import <FTMobileSDK/FTSessionReplayConfig+Private.h>
+#import <React/RCTConvert.h>
+#import "FTRCTTextViewRecorder.h"
+@implementation FTReactNativeSessionReplay
+@synthesize bridge = _bridge;
+
+RCT_EXPORT_MODULE()
+
+// Example method
+// See // https://reactnative.dev/docs/native-modules-ios
+RCT_REMAP_METHOD(sessionReplayConfig,
+                  context:(NSDictionary *)context
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
+{
+  FTSessionReplayConfig *config = [[FTSessionReplayConfig alloc]init];
+  if([context.allKeys containsObject:@"sampleRate"]){
+    config.sampleRate = [RCTConvert double:context[@"sampleRate"]]*100;
+  }
+  if([context.allKeys containsObject:@"privacy"]){
+    int privacy = [context[@"privacy"] intValue];
+    switch (privacy){
+      case 0:
+        config.privacy = FTSRPrivacyMask;
+        break;
+      case 1:
+        config.privacy = FTSRPrivacyAllow;
+        break;
+      case 2:
+        config.privacy = FTSRPrivacyMaskUserInput;
+        break;
+    }
+  }
+  FTRCTTextViewRecorder *recorder = [[FTRCTTextViewRecorder alloc]initWithUIManager:_bridge.uiManager];
+  [config setAdditionalNodeRecorders:@[recorder]];
+  [[FTRumSessionReplay sharedInstance] startWithSessionReplayConfig:config];
+  resolve(nil);
+}
++ (BOOL)requiresMainQueueSetup {
+    return NO;
+}
+@end
