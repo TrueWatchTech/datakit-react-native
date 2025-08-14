@@ -1825,7 +1825,7 @@
 
 "@truewatchtech/react-native-mobile-cli@file:../truewatchtech-react-native-mobile-cli-v1.0.0.tgz":
   version "1.0.0"
-  resolved "file:../truewatchtech-react-native-mobile-cli-v1.0.0.tgz#243f9d78c53b945944716492cd60673a8dfe0f03"
+  resolved "file:../truewatchtech-react-native-mobile-cli-v1.0.0.tgz#b8dbdfd74d924e27eff3ebfb1ee11adf5e4393f7"
   dependencies:
     axios "^1.7.4"
     chalk "3.0.0"
