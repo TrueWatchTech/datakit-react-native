@@ -5,7 +5,7 @@ apply plugin: "com.facebook.react"
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 apply plugin: 'ft-plugin'
-apply from: "../../node_modules/@truewatch/react-native-mobile-cli/ft-sourcemaps.gradle"
+apply from: "../../node_modules/@truewatchtech/react-native-mobile-cli/ft-sourcemaps.gradle"
 
 FTExt {
   showLog = true
@@ -127,8 +127,8 @@ dependencies {
     api project(':reactnativeftmobileagent')
 
     // gradle dependency for mixed React Native and Android  Project
-    implementation 'com.truewatch.ft.mobile.sdk.tracker.agent:ft-sdk:1.6.11'
-    implementation 'com.truewatch.ft.mobile.sdk.tracker.agent:ft-native:1.1.1'
+    implementation 'com.truewatch.ft.mobile.sdk.tracker.agent:ft-sdk:1.6.13'
+    implementation 'com.truewatch.ft.mobile.sdk.tracker.agent:ft-native:1.1.2'
 
 }
 
