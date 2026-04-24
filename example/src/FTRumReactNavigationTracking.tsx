@@ -164,4 +164,3 @@ export class FTRumReactNavigationTracking {
     }
 
 }
-

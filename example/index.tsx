@@ -8,6 +8,7 @@ import {
   DetectFrequency,
   DeviceMetricsMonitorType,
   EnvType,
+  IOSCrashMonitoringType,
   ErrorMonitorType,
   FTLogConfig,
   FTLogStatus,
@@ -24,6 +25,11 @@ import {
   FTRumActionTracking,
   FTRumErrorTracking
 } from '@truewatchtech/react-native-mobile';
+import {
+  FTReactNativeSessionReplay,
+  FTSessionReplayConfig,
+  SessionReplayPrivacy,
+} from '@truewatchtech/react-native-session-replay';
 import Config from 'react-native-config';
 
 
@@ -48,16 +54,40 @@ function hybridConfig(){
 async function reactNativeInitSDK() {
   //Basic configuration
   let config: FTMobileConfig = {
-    datakitUrl:Config.SERVER_URL,
+    datawayUrl:Config.DATAWAY_URL,
+    clientToken:Config.CLIENT_TOKEN,
     debug: true,
     env:'test',
     enableLimitWithDbSize:true,
     dbCacheLimit:50*1024*1024,
     dbDiscardStrategy:FTDBCacheDiscard.discard,
+    remoteConfiguration:true,
     // envType:EnvType.prod,
     globalContext: { 'sdk_example': 'example1' },
+    remoteConfigOverrideRules: [
+      {
+        id: 'auto_rule1',
+        enabled: true,
+        match: {
+          customKeys: {
+            env: 'test'
+          }
+        },
+        override: {
+          rumSampleRate: 1.0,
+          traceSampleRate: 1.0,
+          logSampleRate: 1.0,
+        }
+      }
+    ]
   };
+  console.log('remote config override rules configured', config.remoteConfigOverrideRules);
   await FTMobileReactNative.sdkConfig(config);
+  FTMobileReactNative.addRemoteConfigListener(
+    (result) => {
+      console.log('addRemoteConfigListener auto remote config callback', result);
+    }
+  );
 
   // log settings
   let logConfig: FTLogConfig = {
@@ -77,6 +107,7 @@ async function reactNativeInitSDK() {
     traceType: TraceType.ddTrace,
   };
   await FTReactNativeTrace.setConfig(traceConfig);
+  FTMobileReactNative.appendBridgeContext({"wgt_id":"widget_id"});
 
   // rum settings
   let rumConfig: FTRUMConfig = {
@@ -87,6 +118,8 @@ async function reactNativeInitSDK() {
     enableNativeUserAction: true,
     enableNativeUserView: false,
     sampleRate:1,
+    enableTraceWebView: true,
+    iosCrashMonitoringType: IOSCrashMonitoringType.all,
     enableNativeUserResource: true,
     enableResourceHostIP:true,
     enableTrackNativeAppANR:true,
@@ -117,7 +150,11 @@ async function reactNativeInitSDK() {
       })
      })
    */
-
+  let sessionReplayConfig:FTSessionReplayConfig = {
+    sampleRate:1,
+    privacy:SessionReplayPrivacy.ALLOW
+  }
+  await FTReactNativeSessionReplay.sessionReplayConfig(sessionReplayConfig);
   FTReactNativeLog.logging('config complete', FTLogStatus.info);
 }
 
