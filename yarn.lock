@@ -4665,16 +4665,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@truewatch/react-native-mobile-session-replay@workspace:packages/session-replay":
-  version: 0.0.0-use.local
-  resolution: "@truewatch/react-native-mobile-session-replay@workspace:packages/session-replay"
-  peerDependencies:
-    "@truewatch/react-native-mobile": ">=0.4.0-alpha.5"
-    react: ">=16.13.1"
-    react-native: ">=0.63.4 <1.0"
-  languageName: unknown
-  linkType: soft
-
 "@truewatchtech/react-native-mobile-cli@file:../truewatchtech-react-native-mobile-cli-v1.0.0.tgz::locator=react-native-mobile-example%40workspace%3Aexample":
   version: 1.0.0
   resolution: "@truewatchtech/react-native-mobile-cli@file:../truewatchtech-react-native-mobile-cli-v1.0.0.tgz::locator=react-native-mobile-example%40workspace%3Aexample"
