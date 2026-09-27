@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "android": "node scripts/run-platform.js android",
+    "ios": "node scripts/run-platform.js ios",
     "start": "react-native start"
   },
   "dependencies": {
@@ -26,6 +26,7 @@
     "@react-native/gradle-plugin": "0.76.9",
     "@react-native/metro-config": "0.76.9",
     "@react-native/typescript-config": "0.76.9",
+    "@truewatchtech/react-native-mobile-babel-plugin": "workspace:packages/react-native-babel-plugin",
     "@types/react": "^18.2.6",
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.6.3",

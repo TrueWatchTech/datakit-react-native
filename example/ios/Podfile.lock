@@ -3,10 +3,10 @@ PODS:
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.74.5)
   - fmt (9.1.0)
-  - FTMobileReactNativeSDK (0.4.1):
+  - FTMobileReactNativeSDK (0.4.3):
     - DoubleConversion
-    - FTMobileSDK (= 1.6.5)
     - glog
+    - TrueWatchSDK (= 1.6.7)
     - hermes-engine
     - RCT-Folly (= 2024.01.01.00)
     - RCTRequired
@@ -25,54 +25,11 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - FTMobileSDK (1.6.5):
-    - FTMobileSDK/FTMobileAgent (= 1.6.5)
-  - FTMobileSDK/FTMobileAgent (1.6.5):
-    - FTMobileSDK/FTSDKCore
-  - FTMobileSDK/FTSDKCore (1.6.5):
-    - FTMobileSDK/FTSDKCore/BaseUtils (= 1.6.5)
-    - FTMobileSDK/FTSDKCore/DataManager (= 1.6.5)
-    - FTMobileSDK/FTSDKCore/FTRUM (= 1.6.5)
-    - FTMobileSDK/FTSDKCore/FTWKWebView (= 1.6.5)
-    - FTMobileSDK/FTSDKCore/Logger (= 1.6.5)
-    - FTMobileSDK/FTSDKCore/Protocol (= 1.6.5)
-    - FTMobileSDK/FTSDKCore/RemoteConfig (= 1.6.5)
-    - FTMobileSDK/FTSDKCore/URLSessionAutoInstrumentation (= 1.6.5)
-  - FTMobileSDK/FTSDKCore/BaseUtils (1.6.5):
-    - FTMobileSDK/FTSDKCore/BaseUtils/Base (= 1.6.5)
-    - FTMobileSDK/FTSDKCore/BaseUtils/Swizzle (= 1.6.5)
-    - FTMobileSDK/FTSDKCore/BaseUtils/Thread (= 1.6.5)
-  - FTMobileSDK/FTSDKCore/BaseUtils/Base (1.6.5):
-    - FTMobileSDK/FTSDKCore/BaseUtils/Thread
-  - FTMobileSDK/FTSDKCore/BaseUtils/Swizzle (1.6.5):
-    - FTMobileSDK/FTSDKCore/BaseUtils/Base
-  - FTMobileSDK/FTSDKCore/BaseUtils/Thread (1.6.5)
-  - FTMobileSDK/FTSDKCore/DataManager (1.6.5):
-    - FTMobileSDK/FTSDKCore/BaseUtils/Base
-    - FTMobileSDK/FTSDKCore/BaseUtils/Thread
-    - FTMobileSDK/FTSDKCore/Protocol
-  - FTMobileSDK/FTSDKCore/FTRUM (1.6.5):
-    - FTMobileSDK/FTSDKCore/BaseUtils/Base
-    - FTMobileSDK/FTSDKCore/Protocol
-  - FTMobileSDK/FTSDKCore/FTWKWebView (1.6.5):
-    - FTMobileSDK/FTSDKCore/BaseUtils/Swizzle
-    - FTMobileSDK/FTSDKCore/Protocol
-  - FTMobileSDK/FTSDKCore/Logger (1.6.5):
-    - FTMobileSDK/FTSDKCore/BaseUtils/Base
-    - FTMobileSDK/FTSDKCore/Protocol
-  - FTMobileSDK/FTSDKCore/Protocol (1.6.5)
-  - FTMobileSDK/FTSDKCore/RemoteConfig (1.6.5):
-    - FTMobileSDK/FTSDKCore/DataManager
-  - FTMobileSDK/FTSDKCore/URLSessionAutoInstrumentation (1.6.5):
-    - FTMobileSDK/FTSDKCore/BaseUtils/Swizzle
-    - FTMobileSDK/FTSDKCore/Protocol
-  - FTMobileSDK/FTSessionReplay (1.6.5):
-    - FTMobileSDK/FTSDKCore
-  - FTSessionReplayReactNative (0.4.1):
+  - FTSessionReplayReactNative (0.4.3):
     - DoubleConversion
-    - FTMobileSDK (= 1.6.5)
-    - FTMobileSDK/FTSessionReplay (= 1.6.5)
     - glog
+    - TrueWatchSDK (= 1.6.7)
+    - TrueWatchSDK/SessionReplay (= 1.6.7)
     - hermes-engine
     - RCT-Folly (= 2024.01.01.00)
     - RCTRequired
@@ -92,6 +49,49 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - glog (0.3.5)
+  - TrueWatchSDK (1.6.7):
+    - TrueWatchSDK/Agent (= 1.6.7)
+  - TrueWatchSDK/Agent (1.6.7):
+    - TrueWatchSDK/Core
+  - TrueWatchSDK/Core (1.6.7):
+    - TrueWatchSDK/Core/BaseUtils (= 1.6.7)
+    - TrueWatchSDK/Core/DataManager (= 1.6.7)
+    - TrueWatchSDK/Core/FTRUM (= 1.6.7)
+    - TrueWatchSDK/Core/FTWKWebView (= 1.6.7)
+    - TrueWatchSDK/Core/Logger (= 1.6.7)
+    - TrueWatchSDK/Core/Protocol (= 1.6.7)
+    - TrueWatchSDK/Core/RemoteConfig (= 1.6.7)
+    - TrueWatchSDK/Core/URLSessionAutoInstrumentation (= 1.6.7)
+  - TrueWatchSDK/Core/BaseUtils (1.6.7):
+    - TrueWatchSDK/Core/BaseUtils/Base (= 1.6.7)
+    - TrueWatchSDK/Core/BaseUtils/Swizzle (= 1.6.7)
+    - TrueWatchSDK/Core/BaseUtils/Thread (= 1.6.7)
+  - TrueWatchSDK/Core/BaseUtils/Base (1.6.7):
+    - TrueWatchSDK/Core/BaseUtils/Thread
+  - TrueWatchSDK/Core/BaseUtils/Swizzle (1.6.7):
+    - TrueWatchSDK/Core/BaseUtils/Base
+  - TrueWatchSDK/Core/BaseUtils/Thread (1.6.7)
+  - TrueWatchSDK/Core/DataManager (1.6.7):
+    - TrueWatchSDK/Core/BaseUtils/Base
+    - TrueWatchSDK/Core/BaseUtils/Thread
+    - TrueWatchSDK/Core/Protocol
+  - TrueWatchSDK/Core/FTRUM (1.6.7):
+    - TrueWatchSDK/Core/BaseUtils/Base
+    - TrueWatchSDK/Core/Protocol
+  - TrueWatchSDK/Core/FTWKWebView (1.6.7):
+    - TrueWatchSDK/Core/BaseUtils/Swizzle
+    - TrueWatchSDK/Core/Protocol
+  - TrueWatchSDK/Core/Logger (1.6.7):
+    - TrueWatchSDK/Core/BaseUtils/Base
+    - TrueWatchSDK/Core/Protocol
+  - TrueWatchSDK/Core/Protocol (1.6.7)
+  - TrueWatchSDK/Core/RemoteConfig (1.6.7):
+    - TrueWatchSDK/Core/DataManager
+  - TrueWatchSDK/Core/URLSessionAutoInstrumentation (1.6.7):
+    - TrueWatchSDK/Core/BaseUtils/Swizzle
+    - TrueWatchSDK/Core/Protocol
+  - TrueWatchSDK/SessionReplay (1.6.7):
+    - TrueWatchSDK/Core
   - hermes-engine (0.74.5):
     - hermes-engine/Pre-built (= 0.74.5)
   - hermes-engine/Pre-built (0.74.5)
@@ -1434,8 +1434,8 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
-  - "FTMobileReactNativeSDK (from `../node_modules/@truewatch/react-native-mobile`)"
-  - "FTSessionReplayReactNative (from `../node_modules/@truewatch/react-native-session-replay`)"
+  - "FTMobileReactNativeSDK (from `../node_modules/@truewatchtech/react-native-mobile`)"
+  - "FTSessionReplayReactNative (from `../node_modules/@truewatchtech/react-native-session-replay`)"
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
@@ -1501,7 +1501,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - FTMobileSDK
+    - TrueWatchSDK
     - HMSegmentedControl
     - SocketRocket
 
@@ -1515,9 +1515,9 @@ EXTERNAL SOURCES:
   fmt:
     :podspec: "../node_modules/react-native/third-party-podspecs/fmt.podspec"
   FTMobileReactNativeSDK:
-    :path: "../node_modules/@truewatch/react-native-mobile"
+    :path: "../node_modules/@truewatchtech/react-native-mobile"
   FTSessionReplayReactNative:
-    :path: "../node_modules/@truewatch/react-native-session-replay"
+    :path: "../node_modules/@truewatchtech/react-native-session-replay"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   hermes-engine:
@@ -1645,10 +1645,10 @@ SPEC CHECKSUMS:
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   FBLazyVector: ac12dc084d1c8ec4cc4d7b3cf1b0ebda6dab85af
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
-  FTMobileReactNativeSDK: a6e9d813310d84baafd44b775b6c1642a8adeb4a
-  FTMobileSDK: 21891e8d0d5c3aa49c8a3363c934a87a479a3106
-  FTSessionReplayReactNative: 3933f197a735e4b1659616ff714fc8c3c64a7d3e
+  FTMobileReactNativeSDK: c12612542bc1c8cf828a5b1795790b894f82af9f
+  FTSessionReplayReactNative: 07a78ed8e1c5a0f94bc3db855c566101b1ad0da7
   glog: fdfdfe5479092de0c4bdbebedd9056951f092c4f
+  TrueWatchSDK: 0e653c09c78a988dfb27511d07997b2948966a09
   hermes-engine: 8c1577f3fdb849cbe7729c2e7b5abc4b845e88f8
   HMSegmentedControl: 34c1f54d822d8308e7b24f5d901ec674dfa31352
   RCT-Folly: 02617c592a293bd6d418e0a88ff4ee1f88329b47
@@ -1711,6 +1711,6 @@ SPEC CHECKSUMS:
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: 950bbfd7e6f04790fdb51149ed51df41f329fcc8
 
-PODFILE CHECKSUM: ee175bfb75601beb27f11eb3304436ed4fea2d9f
+PODFILE CHECKSUM: 4e329067e75ff288d007b8241d5e9c5b4d2e0bf0
 
 COCOAPODS: 1.16.2

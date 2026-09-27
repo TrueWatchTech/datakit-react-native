@@ -42,6 +42,7 @@ const lernaVersion = readJson('lerna.json').version;
 const packagePaths = [
   'packages/react-native-mobile/package.json',
   'packages/react-native-session-replay/package.json',
+  'packages/react-native-babel-plugin/package.json',
 ];
 
 for (const packagePath of packagePaths) {
@@ -63,11 +64,16 @@ if (!versionMatch) {
 }
 
 const tag = getExactGitTag();
-const expectedTags = new Set([`agent_${lernaVersion}`, `agent_v${lernaVersion}`]);
+const expectedTags = new Set([
+  `agent_${lernaVersion}`,
+  `agent_v${lernaVersion}`,
+  `tw_agent_${lernaVersion}`,
+  `tw_agent_v${lernaVersion}`,
+]);
 
 if (tag && !expectedTags.has(tag)) {
   fail(
-    `current git tag ${tag} does not match package version ${lernaVersion}; expected agent_${lernaVersion}`
+    `current git tag ${tag} does not match package version ${lernaVersion}; expected agent_${lernaVersion} or tw_agent_${lernaVersion}`
   );
 }
 

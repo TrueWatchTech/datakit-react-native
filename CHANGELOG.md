@@ -2,6 +2,20 @@
 > * [Android](https://github.com/TrueWatchTech/datakit-android/blob/dev/ft-sdk/CHANGELOG.md)
 > * [iOS ](https://github.com/TrueWatchTech/datakit-ios/blob/develop/CHANGELOG.md)
 
+# 0.4.3-alpha.2
+* Fixed npm publishing for the Babel plugin.
+* Improved Babel plugin prerelease compatibility.
+
+---
+# 0.4.3-alpha.1
+* Upgraded compatibility to iOS `TrueWatchSDK 1.6.7`, Android `ft-sdk 1.7.5`, Android `ft-plugin 1.3.8` and Android `ft-session-replay 0.1.8`.
+* Fixed remote configuration updates and callbacks under React Native New Architecture on iOS and Android.
+* Added iOS WebSocket handshake Resource collection via `FTRUMConfig.enableIOSWebSocketResource` (default `false`), independent of `enableNativeUserResource`. Android WebSocket handshakes use native SDK automatic collection, controlled by `enableNativeUserResource`.
+* Improved React Native development Resource filtering on iOS and Android to exclude Metro, Inspector, HMR, and debugger WebSocket requests.
+* Added the optional `@truewatchtech/react-native-mobile-babel-plugin` package for build-time React Native interaction tracking and readable RUM `action_name` values.
+* Added React Native JavaScript long task monitoring on iOS and Android, with `FTRUMConfig.enableLongTask` to enable collection and `FTRUMConfig.longTaskThresholdMs` to configure the detection threshold.
+
+---
 # 0.4.2
 * Added `FTMobileConfig.enableDataFilter` and `FTMobileConfig.dataFilters` to support SDK-side local blocklist data filtering.
 * Upgraded compatibility to iOS `FTMobileSDK 1.6.5`, Android `ft-sdk 1.7.2`, and Android `ft-session-replay 0.1.5`.

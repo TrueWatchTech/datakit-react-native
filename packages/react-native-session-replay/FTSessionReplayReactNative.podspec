@@ -12,13 +12,13 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => "10.0" }
-  s.source       = { :git => "https://github.com/TruWatchTech/datakit-react-native.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/TrueWatchTech/datakit-react-native.git", :tag => "agent_#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
   s.dependency "React-Core"
-  s.dependency "FTMobileSDK", "1.6.5"
-  s.dependency "FTMobileSDK/FTSessionReplay", "1.6.5"
+  s.dependency "TrueWatchSDK", "1.6.7"
+  s.dependency "TrueWatchSDK/SessionReplay", "1.6.7"
 
   xcconfig = {
     "HEADER_SEARCH_PATHS" => "$(inherited) " +

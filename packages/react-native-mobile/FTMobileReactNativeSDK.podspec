@@ -12,15 +12,17 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => "10.0" }
-  s.source       = { :git => "https://github.com/TrueWatchTech/datakit-react-native.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/TrueWatchTech/datakit-react-native.git", :tag => "agent_#{s.version}" }
 
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
+  s.private_header_files = "ios/FTJSLongTaskMonitor.h", "ios/FTWebSocketMetadataStore.h", "ios/FTReactNativeWebSocket.h", "ios/FTReactNativeResource.h", "ios/FTWebSocketResourceData.h"
+  s.frameworks = "CFNetwork"
 
 
   s.dependency "React-Core"
-  s.dependency 'FTMobileSDK', '1.6.5'
-  
+  s.dependency 'TrueWatchSDK', '1.6.7'
+
     xcconfig = {
     "HEADER_SEARCH_PATHS" => "$(inherited) " +
       "$(PODS_ROOT)/React-RCTFabric/** " +
@@ -36,7 +38,7 @@ Pod::Spec.new do |s|
 
   if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
     s.compiler_flags = folly_compiler_flags + " -DRCT_NEW_ARCH_ENABLED=1"
-    
+
     xcconfig.merge!({
       "DEFINES_MODULE" => "YES",
       "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
@@ -48,5 +50,5 @@ Pod::Spec.new do |s|
    if respond_to?(:install_modules_dependencies, true)
     install_modules_dependencies(s)
   end
-  
+
 end

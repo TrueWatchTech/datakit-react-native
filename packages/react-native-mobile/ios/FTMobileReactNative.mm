@@ -8,12 +8,13 @@
 
 #import "FTMobileReactNative.h"
 #import <React/RCTConvert.h>
-#import <FTMobileSDK/FTMobileAgent.h>
-#import <FTMobileSDK/FTMobileConfig+Private.h>
-#import <FTMobileSDK/FTThreadDispatchManager.h>
-#import <FTMobileSDK/FTConstants.h>
-#import <FTMobileSDK/FTJSONUtil.h>
-#import <FTMobileSDK/FTRemoteConfigModel+Private.h>
+#import <TrueWatchSDK/FTMobileAgent.h>
+#import <TrueWatchSDK/FTSDKConfig+Private.h>
+#import <TrueWatchSDK/FTThreadDispatchManager.h>
+#import <TrueWatchSDK/FTConstants.h>
+#import <TrueWatchSDK/FTJSONUtil.h>
+#import <TrueWatchSDK/FTRemoteConfigModel+Private.h>
+#import "FTWebSocketMetadataStore.h"
 
 static NSString *const FTRemoteConfigCallbackEvent = @"ft_remote_config_callback";
 
@@ -373,14 +374,14 @@ RCT_REMAP_METHOD(clearAllData,
 #endif
 - (void)sdkConfig:(NSDictionary *)context resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
   [FTThreadDispatchManager performBlockDispatchMainSyncSafe:^{
-    FTMobileConfig *config;
+    FTSDKConfig *config;
     NSString *datakitUrl = [RCTConvert NSString:context[@"datakitUrl"]];
     NSString *dataWayUrl = [RCTConvert NSString:context[@"datawayUrl"]];
     NSString *clientToken = [RCTConvert NSString:context[@"clientToken"]];
     if(dataWayUrl && dataWayUrl.length>0 && clientToken && clientToken.length>0){
-      config = [[FTMobileConfig alloc]initWithDatawayUrl:dataWayUrl clientToken:clientToken];
+      config = [[FTSDKConfig alloc]initWithDatawayUrl:dataWayUrl clientToken:clientToken];
     }else if(datakitUrl && datakitUrl.length>0){
-      config = [[FTMobileConfig alloc]initWithDatakitUrl:datakitUrl];
+      config = [[FTSDKConfig alloc]initWithDatakitUrl:datakitUrl];
     }else{
       resolve(nil);
       return;
@@ -490,6 +491,7 @@ RCT_REMAP_METHOD(clearAllData,
       };
     }
     [FTMobileAgent startWithConfigOptions:config];
+    [FTWebSocketMetadataStore sdkDidStart];
     resolve(nil);
   }];
 }
@@ -537,6 +539,7 @@ RCT_REMAP_METHOD(clearAllData,
 }
 
 - (void)shutDown:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 
+  [FTWebSocketMetadataStore shutDown];
   [FTMobileAgent shutDown];
   resolve(nil);
 }
@@ -553,9 +556,8 @@ RCT_REMAP_METHOD(clearAllData,
 
   }];
 }
-RCT_REMAP_METHOD(updateRemoteConfig,
-                 updateRemoteConfig_findEventsWithResolver:(RCTPromiseResolveBlock)resolve
-                 rejecter:(RCTPromiseRejectBlock)reject){
+RCT_EXPORT_METHOD(updateRemoteConfig:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject){
     if (!_remoteConfigurationEnabled) {
       reject(@"E_REMOTE_CONFIG_DISABLED", @"Remote configuration is not enabled.", nil);
       return;
@@ -580,11 +582,10 @@ RCT_REMAP_METHOD(updateRemoteConfig,
       return nil;
     }];
 }
-RCT_REMAP_METHOD(updateRemoteConfigWithMiniUpdateInterval,
-                  interval:(int)interval
+RCT_EXPORT_METHOD(updateRemoteConfigWithMiniUpdateInterval:(double)interval
                   rules:(NSArray *)rules
-                  findEventsWithResolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject){
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject){
   if (!_remoteConfigurationEnabled) {
     reject(@"E_REMOTE_CONFIG_DISABLED", @"Remote configuration is not enabled.", nil);
     return;

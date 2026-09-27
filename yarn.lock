@@ -3547,6 +3547,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-community/cli-platform-apple@patch:@react-native-community/cli-platform-apple@npm%3A13.6.9#./.yarn/patches/@react-native-community-cli-platform-apple-npm-13.6.9-af92330889.patch::locator=ft-sdk-react-native%40workspace%3A.":
+  version: 13.6.9
+  resolution: "@react-native-community/cli-platform-apple@patch:@react-native-community/cli-platform-apple@npm%3A13.6.9#./.yarn/patches/@react-native-community-cli-platform-apple-npm-13.6.9-af92330889.patch::version=13.6.9&hash=071e03&locator=ft-sdk-react-native%40workspace%3A."
+  dependencies:
+    "@react-native-community/cli-tools": 13.6.9
+    chalk: ^4.1.2
+    execa: ^5.0.0
+    fast-glob: ^3.3.2
+    fast-xml-parser: ^4.0.12
+    ora: ^5.4.1
+  checksum: 26ec95a6adb7e6939f25b21b881d4a723a35980c0cb0ccb5fec17b84600122501d7b364f6aa7810ccbcebdacc6ae63c67ed3635bfa187edd78628b2a04f096a6
+  languageName: node
+  linkType: hard
+
 "@react-native-community/cli-platform-ios@npm:13.6.9":
   version: 13.6.9
   resolution: "@react-native-community/cli-platform-ios@npm:13.6.9"
@@ -4665,6 +4679,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@truewatchtech/react-native-mobile-babel-plugin@workspace:packages/react-native-babel-plugin":
+  version: 0.0.0-use.local
+  resolution: "@truewatchtech/react-native-mobile-babel-plugin@workspace:packages/react-native-babel-plugin"
+  dependencies:
+    "@babel/core": ^7.20.0
+    "@babel/helper-plugin-utils": ^7.20.2
+    "@babel/plugin-transform-modules-commonjs": ^7.28.6
+    "@babel/plugin-transform-react-jsx": ^7.25.2
+  peerDependencies:
+    "@babel/core": ^7.0.0
+    "@truewatchtech/react-native-mobile": ^0.4.3-0
+    react: ">=16.13.1"
+    react-native: ">=0.63.4 <1.0"
+  languageName: unknown
+  linkType: soft
+
 "@truewatchtech/react-native-mobile-cli@file:../truewatchtech-react-native-mobile-cli-v1.0.0.tgz::locator=react-native-mobile-example%40workspace%3Aexample":
   version: 1.0.0
   resolution: "@truewatchtech/react-native-mobile-cli@file:../truewatchtech-react-native-mobile-cli-v1.0.0.tgz::locator=react-native-mobile-example%40workspace%3Aexample"
@@ -5425,9 +5455,9 @@ __metadata:
   linkType: hard
 
 "@xmldom/xmldom@npm:^0.8.8":
-  version: 0.8.13
-  resolution: "@xmldom/xmldom@npm:0.8.13"
-  checksum: b5568a3dee6306c4c6256c94f27d74f904d7cc923607f0dcaa37998e370361ce37a6e99aa55e8e725f07079e619a6f8b3a7de218e76b522ba2b1aca3ada5265c
+  version: 0.8.12
+  resolution: "@xmldom/xmldom@npm:0.8.12"
+  checksum: 609bbcd6f31fa24023f5cc836e804d49c60e3df83ca73f744da9caff7fed516221dcf2f23de44e5289d715951781ec35fa90adf57008c3eae944a7550c39e325
   languageName: node
   linkType: hard
 
@@ -5475,6 +5505,7 @@ __metadata:
     "@react-native/metro-config": 0.76.9
     "@react-native/typescript-config": 0.76.9
     "@truewatchtech/react-native-mobile": "workspace:packages/react-native-mobile"
+    "@truewatchtech/react-native-mobile-babel-plugin": "workspace:packages/react-native-babel-plugin"
     "@truewatchtech/react-native-session-replay": "workspace:packages/react-native-session-replay"
     "@types/react": ^18.2.6
     "@types/react-test-renderer": ^18.0.0
@@ -6022,7 +6053,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:1.15.0":
+"axios@npm:1.15.0, axios@npm:^1.7.4":
   version: 1.15.0
   resolution: "axios@npm:1.15.0"
   dependencies:
@@ -6030,17 +6061,6 @@ __metadata:
     form-data: ^4.0.5
     proxy-from-env: ^2.1.0
   checksum: 95a8455554867a083ab3772fcadba42a22ec4bb546dccc66011556d837a07e544ae006675a30a5c43453f3e37e7c0982e934cec482c06b75abead2a2c157448a
-  languageName: node
-  linkType: hard
-
-"axios@npm:^1.7.4":
-  version: 1.15.2
-  resolution: "axios@npm:1.15.2"
-  dependencies:
-    follow-redirects: ^1.15.11
-    form-data: ^4.0.5
-    proxy-from-env: ^2.1.0
-  checksum: e7d208b751959c7c6936417b870d6286979e0dff17784ae230d3988e754b6322682cb136e25669b534072b6f44c08715801ab961227eb8cc075323d9fda8ad43
   languageName: node
   linkType: hard
 
@@ -15747,6 +15767,7 @@ __metadata:
     "@react-navigation/native": ^6.1.18
     "@react-navigation/native-stack": ^6.11.0
     "@truewatchtech/react-native-mobile": "workspace:packages/react-native-mobile"
+    "@truewatchtech/react-native-mobile-babel-plugin": "workspace:packages/react-native-babel-plugin"
     "@truewatchtech/react-native-mobile-cli": "file:../truewatchtech-react-native-mobile-cli-v1.0.0.tgz"
     "@truewatchtech/react-native-session-replay": "workspace:packages/react-native-session-replay"
     "@types/react": ^18.2.6

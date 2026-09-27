@@ -48,7 +48,7 @@ class MainApplication : NavigationApplication(), ReactApplication {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       load()
     }
-    //truewatchSDKInit()
+    //SDKInit()
   }
 
   fun SDKInit(){

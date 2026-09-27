@@ -6,6 +6,21 @@ module.exports = {
   presets: ['module:metro-react-native-babel-preset'],
   plugins: [
     [
+      '@truewatchtech/react-native-mobile-babel-plugin',
+      {
+        components: {
+          tracked: [
+            {
+              name: 'PressableItem',
+              contentProp: 'title',
+              useNamePrefix: false,
+              handlers: [{event: 'onPress'}],
+            },
+          ],
+        },
+      },
+    ],
+    [
       'module-resolver',
       {
         alias: {

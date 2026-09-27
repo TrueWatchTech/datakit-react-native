@@ -38,6 +38,7 @@
     "@babel/runtime": "^7.20.0",
     "@react-native/metro-config": "0.74.85",
     "@react-native/typescript-config": "0.74.85",
+    "@truewatchtech/react-native-mobile-babel-plugin": "workspace:packages/react-native-babel-plugin",
     "@truewatchtech/react-native-mobile-cli": "file:../truewatchtech-react-native-mobile-cli-v1.0.0.tgz",
     "@types/react": "^18.2.6",
     "babel-plugin-module-resolver": "^4.0.0",

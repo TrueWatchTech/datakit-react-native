@@ -11,12 +11,12 @@
 #import <React/RCTRawTextShadowView.h>
 #import <React/RCTTextShadowView.h>
 #import <React/RCTVirtualTextShadowView.h>
-#import <FTMobileSDK/FTSRWireframe.h>
-#import <FTMobileSDK/FTViewAttributes.h>
-#import <FTMobileSDK/FTSRUtils.h>
-#import <FTMobileSDK/FTSystemColors.h>
-#import <FTMobileSDK/FTViewTreeRecordingContext.h>
-#import <FTMobileSDK/FTSRUtils.h>
+#import <TrueWatchSDK/FTSRWireframe.h>
+#import <TrueWatchSDK/FTViewAttributes.h>
+#import <TrueWatchSDK/FTSRUtils.h>
+#import <TrueWatchSDK/FTSystemColors.h>
+#import <TrueWatchSDK/FTViewTreeRecordingContext.h>
+#import <TrueWatchSDK/FTSRUtils.h>
 #import <React/RCTShadowView+Layout.h>
 #import "FTRCTFabricWrapper.h"
 
@@ -167,5 +167,4 @@
   return CGRectMake(self.attributes.frame.origin.x+self.contentRect.origin.x, self.attributes.frame.origin.y+self.contentRect.origin.y, self.contentRect.size.width, self.contentRect.size.height);
 }
 @end
-
 

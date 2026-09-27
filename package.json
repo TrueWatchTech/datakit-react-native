@@ -28,9 +28,10 @@
     "update-version": "./update-version.sh",
     "check-version": "node scripts/check-version.js",
     "pods": "cd example && pod-install --quiet",
-    "lint": "yarn workspace @truewatchtech/react-native-mobile lint && yarn workspace @truewatchtech/react-native-session-replay lint",
-    "typescript": "yarn workspace @truewatchtech/react-native-mobile typescript && yarn workspace @truewatchtech/react-native-session-replay typescript",
-    "test": "yarn workspace @truewatchtech/react-native-mobile test"
+    "lint": "yarn workspace @truewatchtech/react-native-mobile lint && yarn workspace @truewatchtech/react-native-session-replay lint && yarn workspace @truewatchtech/react-native-mobile-babel-plugin lint",
+    "typescript": "yarn workspace @truewatchtech/react-native-mobile typescript && yarn workspace @truewatchtech/react-native-session-replay typescript && yarn workspace @truewatchtech/react-native-mobile-babel-plugin typescript",
+    "test": "yarn workspace @truewatchtech/react-native-mobile test && yarn workspace @truewatchtech/react-native-mobile-babel-plugin test",
+    "test:publish": "node --test scripts/publish-npm.test.cjs"
   },
   "prettier": {
     "quoteProps": "consistent",
@@ -64,5 +65,8 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "yarn@3.4.1"
+  "packageManager": "yarn@3.4.1",
+  "resolutions": {
+    "@react-native-community/cli-platform-apple@13.6.9": "patch:@react-native-community/cli-platform-apple@npm%3A13.6.9#./.yarn/patches/@react-native-community-cli-platform-apple-npm-13.6.9-af92330889.patch"
+  }
 }

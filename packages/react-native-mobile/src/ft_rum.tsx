@@ -1,7 +1,11 @@
 // import { NativeModules } from 'react-native';
+import { Platform } from 'react-native';
 import { FTRumErrorTracking } from './rum/FTRumErrorTracking';
 import { FTRumActionTracking } from './rum/FTRumActionTracking';
+import { FTBabelInteractionTracking } from './rum/FTBabelInteractionTracking';
+import { FTRumWebSocketTracking } from './rum/FTRumWebSocketTracking';
 import { bridgeContextManager } from './ft_mobile_agent';
+import { normalizeLongTaskThreshold } from './rum/longTasksUtils';
 
 /**
  * Error monitoring type.
@@ -80,9 +84,15 @@ export enum IOSCrashMonitoringType {
  * @param enableTrackNativeAppANR whether to collect Native ANR
  * @param enableTrackNativeFreeze whether to collect Native Freeze
  * @param nativeFreezeDurationMs set the threshold for collecting Native Freeze, value range [100,), unit ms. iOS default 250ms, Android default 1000ms
+ * @param enableLongTask whether to collect React Native JavaScript LongTasks, default false
+ * @param longTaskThresholdMs set the threshold for collecting React Native JavaScript LongTasks, unit ms. Defaults to 100 and is clamped to [100, 5000]
  * @param enableNativeUserAction whether to start Native Action tracking, Button click events, recommended to disable for pure react-native apps
  * @param enableNativeUserView whether to start Native View auto tracking, recommended to disable for pure react-native apps
  * @param enableNativeUserResource whether to automatically collect react-native Resource
+ * @param enableIOSWebSocketResource whether to collect iOS WebSocket opening handshakes as RUM Resources. Defaults to false.
+ * Independent of enableNativeUserResource. Android native WebSocket collection is unaffected.
+ * iOS WebSocket Trace header injection requires both this option and enableNativeAutoTrace.
+ * When disabled, new iOS WebSocket connections are not instrumented or automatically injected with Trace headers by this SDK.
  * @param enableResourceHostIP whether to collect network request Host IP (only for native http, iOS 13 and above)
  * @param errorMonitorType error monitoring supplement type
  * @param deviceMonitorType page monitoring supplement type
@@ -105,9 +115,12 @@ export interface FTRUMConfig {
   enableTrackNativeAppANR?: boolean;
   enableTrackNativeFreeze?: boolean;
   nativeFreezeDurationMs?: number;
+  enableLongTask?: boolean;
+  longTaskThresholdMs?: number;
   enableNativeUserAction?: boolean;
   enableNativeUserView?: boolean;
   enableNativeUserResource?: boolean;
+  enableIOSWebSocketResource?: boolean;
   enableResourceHostIP?: boolean;
   errorMonitorType?: ErrorMonitorType;
   deviceMonitorType?: DeviceMetricsMonitorType;
@@ -259,20 +272,66 @@ type FTReactNativeRUMType = {
   ): Promise<void>;
 };
 
+function isBabelPluginEnabled(): boolean {
+  if (typeof globalThis !== 'undefined') {
+    return globalThis.__FT_RN_BABEL_PLUGIN_ENABLED__ === true;
+  }
+  if (typeof global !== 'undefined') {
+    return global.__FT_RN_BABEL_PLUGIN_ENABLED__ === true;
+  }
+  return false;
+}
+
 class FTReactNativeRUMWrapper implements FTReactNativeRUMType {
+  private webSocketConfigVersion = 0;
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   private rum: FTReactNativeRUMType = require('./specs/NativeFTReactNativeRUM')
     .default;
 
   setConfig(config: FTRUMConfig): Promise<void> {
+    bridgeContextManager.configureLongTaskContext(
+      config.enableLongTask === true
+    );
+    const webSocketLifecycle = FTRumWebSocketTracking.getLifecycleVersion();
+    const webSocketConfigVersion = ++this.webSocketConfigVersion;
+    const trackWebSocket = config.enableIOSWebSocketResource === true;
     console.log('FTRUMConfig');
     if (config.enableAutoTrackError) {
       FTRumErrorTracking.startTracking();
     }
-    if (config.enableAutoTrackUserAction) {
+    const babelPluginEnabled = isBabelPluginEnabled();
+    FTBabelInteractionTracking.configure({
+      trackInteractions:
+        babelPluginEnabled && Boolean(config.enableAutoTrackUserAction),
+      actionReporter: (actionName, actionType, property) =>
+        this.startAction(actionName, actionType, property),
+    });
+    if (config.enableAutoTrackUserAction && !babelPluginEnabled) {
       FTRumActionTracking.startTracking();
+    } else {
+      FTRumActionTracking.stopTracking();
     }
-    return this.rum.setConfig(config);
+    return this.rum
+      .setConfig({
+        ...config,
+        enableLongTask: config.enableLongTask === true,
+        longTaskThresholdMs: normalizeLongTaskThreshold(
+          config.longTaskThresholdMs
+        ),
+      })
+      .then(() => {
+        if (
+          webSocketLifecycle !== FTRumWebSocketTracking.getLifecycleVersion() ||
+          webSocketConfigVersion !== this.webSocketConfigVersion
+        ) {
+          return;
+        }
+        if (Platform.OS === 'ios' && trackWebSocket) {
+          FTRumWebSocketTracking.startTracking(this);
+        } else {
+          FTRumWebSocketTracking.stopTracking();
+        }
+      });
   }
   startAction(
     actionName: string,

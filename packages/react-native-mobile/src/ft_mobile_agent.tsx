@@ -3,7 +3,10 @@ import {
   NativeEventEmitter,
   NativeModules,
 } from 'react-native';
+import type { Spec as NativeFTMobileReactNativeSpec } from './specs/NativeFTMobileReactNative';
+import type { Spec as NativeFTReactNativeRUMSpec } from './specs/NativeFTReactNativeRUM';
 import { version as sdkVersion } from './version';
+import { FTRumWebSocketTracking } from './rum/FTRumWebSocketTracking';
 
 /**
  * Bridge context manager for managing shared properties across RUM and Logger modules
@@ -13,6 +16,7 @@ import { version as sdkVersion } from './version';
 class BridgeContextManager {
   private static instance: BridgeContextManager;
   private properties: Map<string, any> = new Map();
+  private longTaskContextEnabled = false;
 
   private constructor() {
     // Initialize with SDK version information
@@ -55,8 +59,32 @@ class BridgeContextManager {
       Object.entries(properties).forEach(([key, value]) => {
         this.properties.set(key, value);
       });
+      if (this.longTaskContextEnabled) {
+        this.syncLongTaskContext();
+      }
     } catch (error) {
       console.warn('Failed to append bridge context:', error);
+    }
+  }
+
+  public configureLongTaskContext(enabled: boolean): void {
+    this.longTaskContextEnabled = enabled;
+    if (enabled) {
+      this.syncLongTaskContext();
+    }
+  }
+
+  private syncLongTaskContext(): void {
+    try {
+      // Apply the snapshot before JS can block. An async native call may run after
+      // the frame that detects the long task and attach stale context to it.
+      const rum: NativeFTReactNativeRUMSpec =
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        require('./specs/NativeFTReactNativeRUM').default;
+      rum.setLongTaskContext(this.mergeWithLocalPropertiesSync());
+    } catch (error) {
+      // Context synchronization must not make a destroyed/older bridge crash the host.
+      console.warn('Failed to sync JS long task bridge context:', error);
     }
   }
 
@@ -209,8 +237,8 @@ export type FTRemoteConfigResult = {
  * @param syncSleepTime interval time between each request during data synchronization, unit milliseconds, 0 < syncSleepTime < 100
  * @param enableDataIntegerCompatible whether to enable data integer compatibility during data synchronization, enabled by default
  * @param compressIntakeRequests whether to compress synchronized data
- * @param enableDataFilter whether to enable SDK-side filtering for app-configured and workspace blocklist rules, enabled by default
- * @param dataFilters app-configured filter rules. Supported categories include `logging` and `rum`. Any data that matches a rule will be discarded.
+ * @param enableDataFilter whether to enable SDK-side local data filters, enabled by default
+ * @param dataFilters local blocklist filter rules. Supported categories include `logging` and `rum`. Any data that matches a rule will be discarded.
  * @param globalContext custom global parameters
  * @param groupIdentifiers iOS side sets the AppGroups Identifier array corresponding to the collected Widget Extension
  * @param enableLimitWithDbSize set whether to enable using db to limit data size, after enabling, `FTLogConfig.logCacheLimitCount` and `FTRUMConfig.rumCacheLimitCount` will no longer take effect
@@ -361,8 +389,10 @@ type FTMobileReactNativeType = {
 
 class FTMobileReactNativeWrapper implements FTMobileReactNativeType {
   /* eslint-disable @typescript-eslint/no-var-requires */
-  private sdk: FTMobileReactNativeType =
+  private sdk: NativeFTMobileReactNativeSpec =
     require('./specs/NativeFTMobileReactNative').default;
+  private rum: NativeFTReactNativeRUMSpec =
+    require('./specs/NativeFTReactNativeRUM').default;
   /* eslint-enable @typescript-eslint/no-var-requires */
 
   private emitter: NativeEventEmitter | null = null;
@@ -419,24 +449,33 @@ class FTMobileReactNativeWrapper implements FTMobileReactNativeType {
   flushSyncData(): Promise<void> {
     return this.sdk.flushSyncData();
   }
-  shutDown(): Promise<void> {
-    return this.sdk.shutDown();
+  async shutDown(): Promise<void> {
+    bridgeContextManager.configureLongTaskContext(false);
+    try {
+      FTRumWebSocketTracking.shutDown();
+      await this.rum.stopLongTaskTracking();
+    } finally {
+      await this.sdk.shutDown();
+    }
   }
   clearAllData(): Promise<void> {
     return this.sdk.clearAllData();
   }
   appendBridgeContext(properties: Record<string, any>): void {
-    // Use bridgeContextManager to store properties in JavaScript and send to native SDK
+    // Store properties in JS and update the native long task snapshot when enabled.
     bridgeContextManager.appendBridgeContext(properties);
   }
   updateRemoteConfig(): Promise<FTRemoteConfigResult> {
-    return this.sdk.updateRemoteConfig();
+    return this.sdk.updateRemoteConfig() as Promise<FTRemoteConfigResult>;
   }
   updateRemoteConfigWithMiniUpdateInterval(
     interval: number,
     rules?: Array<FTRemoteConfigOverrideRule>
   ): Promise<FTRemoteConfigResult> {
-    return this.sdk.updateRemoteConfigWithMiniUpdateInterval(interval, rules);
+    return this.sdk.updateRemoteConfigWithMiniUpdateInterval(
+      interval,
+      rules
+    ) as Promise<FTRemoteConfigResult>;
   }
   addRemoteConfigListener(
     listener: (result: FTRemoteConfigResult) => void

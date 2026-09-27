@@ -7,20 +7,47 @@
 //
 
 #import "FTReactNativeRUM.h"
-#import <FTMobileSDK/FTMobileAgent.h>
-#import <FTMobileSDK/FTExternalDataManager.h>
-#import <FTMobileSDK/FTResourceMetricsModel.h>
-#import <FTMobileSDK/FTResourceContentModel.h>
+#import <TrueWatchSDK/FTMobileAgent.h>
+#import <TrueWatchSDK/FTExternalDataManager.h>
+#import "FTReactNativeResource.h"
 #import <React/RCTConvert.h>
+#import <React/RCTBridge.h>
+#import <UIKit/UIKit.h>
 #import "FTReactNativeUtils.h"
+#import "FTJSLongTaskMonitor.h"
+
+@interface FTReactNativeRUM ()
+@property (atomic, strong, nullable) FTJSLongTaskMonitor *jsLongTaskMonitor;
+- (FTJSLongTaskMonitor *)getOrCreateLongTaskMonitor;
+@end
+
 
 @implementation FTReactNativeRUM
+@synthesize bridge = _bridge;
 RCT_EXPORT_MODULE()
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setLongTaskContext:(NSDictionary *)context) {
+  [[self getOrCreateLongTaskMonitor] setBridgeContext:context ?: @{}];
+  return @YES;
+}
+
+- (FTJSLongTaskMonitor *)getOrCreateLongTaskMonitor {
+  @synchronized (self) {
+    if (self.jsLongTaskMonitor == nil) {
+      self.jsLongTaskMonitor = [FTJSLongTaskMonitor monitorWithBridge:self.bridge];
+    }
+    return self.jsLongTaskMonitor;
+  }
+}
 RCT_REMAP_METHOD(setConfig,
                  context:(NSDictionary *)context
                  findEventsWithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject){
   [self setConfig:context resolve:resolve reject:reject];
+}
+RCT_REMAP_METHOD(stopLongTaskTracking,
+                 stopLongTaskTrackingWithResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject){
+  [self stopLongTaskTracking:resolve reject:reject];
 }
 RCT_REMAP_METHOD(startAction,
                  actionName:(NSString *)actionName actionType:(NSString *)actionType property:(NSDictionary *)property
@@ -88,6 +115,33 @@ RCT_REMAP_METHOD(addResource,
 }
 #endif
 
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [[NSNotificationCenter defaultCenter]
+      addObserver:self
+      selector:@selector(applicationDidBecomeActive:)
+      name:UIApplicationDidBecomeActiveNotification
+      object:nil];
+    [[NSNotificationCenter defaultCenter]
+      addObserver:self
+      selector:@selector(applicationWillResignActive:)
+      name:UIApplicationWillResignActiveNotification
+      object:nil];
+  }
+  return self;
+}
+
+- (void)invalidate {
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [self.jsLongTaskMonitor disableWithCompletion:nil];
+}
+
+- (void)dealloc {
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [_jsLongTaskMonitor disableWithCompletion:nil];
+}
+
 - (void)addAction:(NSString *)actionName actionType:(NSString *)actionType property:(NSDictionary *)property resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 
   [[FTExternalDataManager sharedManager] addAction:actionName actionType:actionType property:property];
   resolve(nil);
@@ -104,29 +158,7 @@ RCT_REMAP_METHOD(addResource,
 }
 
 - (void)addResource:(NSString *)key resource:(NSDictionary *)content metrics:(NSDictionary *)metrics resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 
-  if (key.length==0 || content.allKeys.count == 0) {
-      return;
-  }
-  FTResourceMetricsModel *metricsModel = nil;
-  if (metrics.allKeys.count>0) {
-      metricsModel = [[FTResourceMetricsModel alloc]init];
-      metricsModel.duration = [RCTConvert NSNumber:metrics[@"duration"]];
-      metricsModel.resource_dns = [RCTConvert NSNumber:metrics[@"resource_dns"]];
-      metricsModel.resource_tcp = [RCTConvert NSNumber:metrics[@"resource_tcp"]];
-      metricsModel.resource_ssl = [RCTConvert NSNumber:metrics[@"resource_ssl"]];
-      metricsModel.resource_ttfb = [RCTConvert NSNumber:metrics[@"resource_ttfb"]];
-      metricsModel.resource_trans = [RCTConvert NSNumber:metrics[@"resource_trans"]];
-      metricsModel.resource_first_byte = [RCTConvert NSNumber:metrics[@"resource_first_byte"]];
-  }
-  FTResourceContentModel *contentModel = [[FTResourceContentModel alloc]init];
-  contentModel.url = [RCTConvert NSURL:content[@"url"]];
-  contentModel.httpMethod = [RCTConvert NSString:content[@"httpMethod"]];
-  contentModel.requestHeader = [RCTConvert NSDictionary:content[@"requestHeader"]];
-  contentModel.responseHeader = [RCTConvert NSDictionary:content[@"responseHeader"]];
-  contentModel.responseBody = [RCTConvert NSString:content[@"responseBody"]];
-  contentModel.httpStatusCode = [RCTConvert int:content[@"resourceStatus"]];
-
-  [[FTExternalDataManager sharedManager] addResourceWithKey:key metrics:metricsModel content:contentModel];
+  FTAddReactNativeResource(key, content, metrics);
   resolve(nil);
 }
 
@@ -139,7 +171,7 @@ RCT_REMAP_METHOD(addResource,
   NSString *rumAppId = [RCTConvert NSString:context[@"iOSAppId"]];
   FTRumConfig *rumConfig = [[FTRumConfig alloc]initWithAppid:rumAppId];
   if ([context.allKeys containsObject:@"sampleRate"]) {
-    rumConfig.samplerate  = [RCTConvert double:context[@"sampleRate"]]*100;
+    rumConfig.sampleRate = [RCTConvert double:context[@"sampleRate"]] * 100;
   }
   if ([context.allKeys containsObject:@"sessionOnErrorSampleRate"]) {
     rumConfig.sessionOnErrorSampleRate  = [RCTConvert double:context[@"sessionOnErrorSampleRate"]]*100;
@@ -177,6 +209,11 @@ RCT_REMAP_METHOD(addResource,
   if ([context.allKeys containsObject:@"nativeFreezeDurationMs"]){
     rumConfig.freezeDurationMs = [RCTConvert double:context[@"nativeFreezeDurationMs"]];
   }
+  BOOL enableLongTask = [RCTConvert BOOL:context[@"enableLongTask"]];
+  double configuredLongTaskThresholdMs = [context.allKeys containsObject:@"longTaskThresholdMs"]
+    ? [RCTConvert double:context[@"longTaskThresholdMs"]]
+    : 100;
+  double longTaskThresholdMs = enableLongTask ? configuredLongTaskThresholdMs : 0;
   if ([context.allKeys containsObject:@"globalContext"]) {
     rumConfig.globalContext = [RCTConvert NSDictionary:context[@"globalContext"]];
   }
@@ -201,7 +238,45 @@ RCT_REMAP_METHOD(addResource,
   };
 #endif
   [[FTMobileAgent sharedInstance] startRumWithConfigOptions:rumConfig];
+  [self getOrCreateLongTaskMonitor];
+  [self.jsLongTaskMonitor setThresholdMilliseconds:longTaskThresholdMs];
+  if (longTaskThresholdMs > 0 && [self applicationIsActive]) {
+    [self.jsLongTaskMonitor start];
+  } else {
+    [self.jsLongTaskMonitor stop];
+  }
   resolve(nil);
+}
+
+- (void)stopLongTaskTracking:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  if (self.jsLongTaskMonitor == nil) {
+    resolve(nil);
+    return;
+  }
+  [self.jsLongTaskMonitor disableWithCompletion:^{
+    resolve(nil);
+  }];
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification {
+  [self.jsLongTaskMonitor start];
+}
+
+- (void)applicationWillResignActive:(NSNotification *)notification {
+  [self.jsLongTaskMonitor stop];
+}
+
+- (BOOL)applicationIsActive {
+  __block BOOL active = NO;
+  dispatch_block_t readState = ^{
+    active = UIApplication.sharedApplication.applicationState == UIApplicationStateActive;
+  };
+  if (NSThread.isMainThread) {
+    readState();
+  } else {
+    dispatch_sync(dispatch_get_main_queue(), readState);
+  }
+  return active;
 }
 
 - (void)startAction:(NSString *)actionName actionType:(NSString *)actionType property:(NSDictionary *)property resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 

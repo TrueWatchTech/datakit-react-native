@@ -1,6 +1,8 @@
 // import { NativeModules } from 'react-native';
 //FTReactNativeTrace
 
+import { FTRumWebSocketTracking } from './rum/FTRumWebSocketTracking';
+
 /**
  * Trace types for use.
  */
@@ -68,13 +70,25 @@ type FTReactNativeTraceType = {
 };
 
 class FTReactNativeTraceWrapper implements FTReactNativeTraceType {
+  private webSocketConfigVersion = 0;
   /* eslint-disable @typescript-eslint/no-var-requires */
   private trace: FTReactNativeTraceType =
     require('./specs/NativeFTReactNativeTrace').default;
   /* eslint-enable @typescript-eslint/no-var-requires */
 
   setConfig(config: FTTraceConfig): Promise<void> {
-    return this.trace.setConfig(config);
+    const webSocketLifecycle = FTRumWebSocketTracking.getLifecycleVersion();
+    const webSocketConfigVersion = ++this.webSocketConfigVersion;
+    const traceWebSocket = config.enableNativeAutoTrace === true;
+    return this.trace.setConfig(config).then(() => {
+      if (
+        webSocketLifecycle !== FTRumWebSocketTracking.getLifecycleVersion() ||
+        webSocketConfigVersion !== this.webSocketConfigVersion
+      ) {
+        return;
+      }
+      FTRumWebSocketTracking.setNativeAutoTraceEnabled(traceWebSocket);
+    });
   }
   /**
    * Get trace HTTP request header data.
