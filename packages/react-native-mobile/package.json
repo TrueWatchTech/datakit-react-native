@@ -1,6 +1,6 @@
 {
   "name": "@truewatchtech/react-native-mobile",
-  "version": "0.4.3-alpha.2",
+  "version": "0.4.3",
   "description": "Base on TrueWatch Android iOS React Native SDK",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -78,7 +78,8 @@
       [
         "typescript",
         {
-          "tsc": "../../node_modules/.bin/tsc"
+          "tsc": "../../node_modules/.bin/tsc",
+          "project": "tsconfig.build.json"
         }
       ]
     ]

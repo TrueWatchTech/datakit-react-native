@@ -12,14 +12,14 @@ import WebViewScreen from './webView';
 import LocalWebViewScreen from './localWebView';
 import SessionReplayScreen from './sessionReplay';
 import WebSocketScreen from './webSocket';
-import { FTRumReactNativeNavigationTracking } from './FTRumReactNativeNavigationTracking';
+import { FTRumReactNativeNavigationTracking } from '@truewatchtech/mobile-react-native-navigation';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 function startReactNativeNavigation() {
   console.log("startReactNativeNavigation");
   // react-native-navigation
   // Enable RUM View collection
-  // Drag the FTRumReactNavigationTracking.tsx file from example into your project;
+  // Install @truewatchtech/mobile-react-native-navigation; no copied adapter is needed.
   // Call the FTRumReactNativeNavigationTracking.startTracking() method to enable collection, as shown below:
   FTRumReactNativeNavigationTracking.startTracking();
   registerScreens();
@@ -79,10 +79,10 @@ const HomeScreen = (props) => {
           compressIntakeRequests:true,
           syncPageSize:5,
           syncSleepTime:10,
-          rumSampleRate:1,
-          rumSessionOnErrorSampleRate:1,
+          sessionSamplingRate:100,
+          sessionOnErrorSamplingRate:100,
           rumEnableTraceUserAction:true,
-          rumEnableTraceUserView:true,
+          rumEnableTraceUserView:false,
           rumEnableTraceUserResource:true,
           rumEnableResourceHostIP:true,
           rumEnableTrackAppUIBlock:true,
@@ -91,10 +91,10 @@ const HomeScreen = (props) => {
           rumEnableTrackAppANR:true,
           rumEnableTraceWebView:true,
           rumAllowWebViewHost:["www.example.com"],
-          traceSampleRate:0.5,
+          traceSamplingRate:50,
           traceEnableAutoTrace:true,
           traceType:"all",
-          logSampleRate:1,
+          logSamplingRate:100,
           logLevelFilters:["info","warn"],
           logEnableCustomLog:true,
           logEnableConsoleLog:true,

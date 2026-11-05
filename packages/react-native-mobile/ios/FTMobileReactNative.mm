@@ -7,6 +7,7 @@
 //
 
 #import "FTMobileReactNative.h"
+#import <TrueWatchSDK/FTSDKAgent.h>
 #import <React/RCTConvert.h>
 #import <TrueWatchSDK/FTMobileAgent.h>
 #import <TrueWatchSDK/FTSDKConfig+Private.h>
@@ -275,11 +276,32 @@ RCT_EXPORT_MODULE()
     if ([override.allKeys containsObject:@"logSampleRate"]) {
       model.logSampleRate = @([RCTConvert double:override[@"logSampleRate"]]);
     }
+    if ([override.allKeys containsObject:@"sessionSamplingRate"]) {
+      model.sessionSamplingRate = @([RCTConvert double:override[@"sessionSamplingRate"]]);
+    }
+    if ([override.allKeys containsObject:@"sessionOnErrorSamplingRate"]) {
+      model.sessionOnErrorSamplingRate = @([RCTConvert double:override[@"sessionOnErrorSamplingRate"]]);
+    }
+    if ([override.allKeys containsObject:@"traceSamplingRate"]) {
+      model.traceSamplingRate = @([RCTConvert double:override[@"traceSamplingRate"]]);
+    }
+    if ([override.allKeys containsObject:@"logSamplingRate"]) {
+      model.logSamplingRate = @([RCTConvert double:override[@"logSamplingRate"]]);
+    }
+    if ([override.allKeys containsObject:@"sessionReplaySamplingRate"]) {
+      model.sessionReplaySamplingRate = @([RCTConvert double:override[@"sessionReplaySamplingRate"]]);
+    }
+    if ([override.allKeys containsObject:@"sessionReplayOnErrorSamplingRate"]) {
+      model.sessionReplayOnErrorSamplingRate = @([RCTConvert double:override[@"sessionReplayOnErrorSamplingRate"]]);
+    }
     if ([override.allKeys containsObject:@"logLevelFilters"]) {
       model.logLevelFilters = [RCTConvert NSArray:override[@"logLevelFilters"]];
     }
     if ([override.allKeys containsObject:@"logEnableCustomLog"]) {
       model.logEnableCustomLog = @([RCTConvert double:override[@"logEnableCustomLog"]]);
+    }
+    if ([override.allKeys containsObject:@"logEnableWebViewLog"] && override[@"logEnableWebViewLog"] != [NSNull null]) {
+      model.logEnableWebViewLog = @([RCTConvert BOOL:override[@"logEnableWebViewLog"]]);
     }
     
     NSString *ruleId = [RCTConvert NSString:rule[@"id"]];
@@ -318,6 +340,12 @@ RCT_REMAP_METHOD(bindRUMUserData,
                  findEventsWithResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject){
   [self bindRUMUserData:userId userName:userName userEmail:userName extra:extra resolve:resolve reject:reject];
+}
+
+RCT_REMAP_METHOD(resetVisitorId,
+                 resetVisitorIdResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject) {
+  [self resetVisitorId:resolve reject:reject];
 }
 
 RCT_REMAP_METHOD(unbindRUMUserData,
@@ -383,8 +411,7 @@ RCT_REMAP_METHOD(clearAllData,
     }else if(datakitUrl && datakitUrl.length>0){
       config = [[FTSDKConfig alloc]initWithDatakitUrl:datakitUrl];
     }else{
-      resolve(nil);
-      return;
+      config = [[FTSDKConfig alloc]init];
     }
     if ([context.allKeys containsObject:@"debug"]) {
       config.enableSDKDebugLog = [RCTConvert BOOL:context[@"debug"]];
@@ -427,6 +454,9 @@ RCT_REMAP_METHOD(clearAllData,
     }
     if ([context.allKeys containsObject:@"dataFilters"]) {
       config.dataFilters = [RCTConvert NSDictionary:context[@"dataFilters"]];
+    }
+    if ([context.allKeys containsObject:@"allowWebViewHost"]) {
+      config.allowWebViewHost = [RCTConvert NSArray:context[@"allowWebViewHost"]];
     }
     if ([context.allKeys containsObject:@"globalContext"]) {
       config.globalContext = [RCTConvert NSDictionary:context[@"globalContext"]];
@@ -528,6 +558,11 @@ RCT_REMAP_METHOD(clearAllData,
   [[FTMobileAgent sharedInstance] unbindUser];
   resolve(nil);
 }
+- (void)resetVisitorId:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [FTSDKAgent resetVisitorID];
+  resolve(nil);
+}
+
 - (void)clearAllData:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
   [FTMobileAgent clearAllData];
   resolve(nil);

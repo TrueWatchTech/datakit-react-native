@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
 
 
   s.dependency "React-Core"
-  s.dependency 'TrueWatchSDK', '1.6.7'
+  s.dependency 'TrueWatchSDK', '1.6.8'
 
     xcconfig = {
     "HEADER_SEARCH_PATHS" => "$(inherited) " +

@@ -171,6 +171,24 @@ public class FTMobileImpl {
                 if (override.hasKey("logSampleRate") && !override.isNull("logSampleRate")) {
                     configBean.setLogSampleRate((float) override.getDouble("logSampleRate"));
                 }
+                if (override.hasKey("sessionSamplingRate") && !override.isNull("sessionSamplingRate")) {
+                    configBean.setSessionSamplingRate((float) override.getDouble("sessionSamplingRate"));
+                }
+                if (override.hasKey("sessionOnErrorSamplingRate") && !override.isNull("sessionOnErrorSamplingRate")) {
+                    configBean.setSessionOnErrorSamplingRate((float) override.getDouble("sessionOnErrorSamplingRate"));
+                }
+                if (override.hasKey("traceSamplingRate") && !override.isNull("traceSamplingRate")) {
+                    configBean.setTraceSamplingRate((float) override.getDouble("traceSamplingRate"));
+                }
+                if (override.hasKey("logSamplingRate") && !override.isNull("logSamplingRate")) {
+                    configBean.setLogSamplingRate((float) override.getDouble("logSamplingRate"));
+                }
+                if (override.hasKey("sessionReplaySamplingRate") && !override.isNull("sessionReplaySamplingRate")) {
+                    configBean.setSessionReplaySamplingRate((float) override.getDouble("sessionReplaySamplingRate"));
+                }
+                if (override.hasKey("sessionReplayOnErrorSamplingRate") && !override.isNull("sessionReplayOnErrorSamplingRate")) {
+                    configBean.setSessionReplayOnErrorSamplingRate((float) override.getDouble("sessionReplayOnErrorSamplingRate"));
+                }
                 if (override.hasKey("logLevelFilters") && !override.isNull("logLevelFilters")) {
                     ReadableArray filtersArray = override.getArray("logLevelFilters");
                     String[] filters = new String[filtersArray.size()];
@@ -181,6 +199,9 @@ public class FTMobileImpl {
                 }
                 if (override.hasKey("logEnableCustomLog") && !override.isNull("logEnableCustomLog")) {
                     configBean.setLogEnableCustomLog(override.getBoolean("logEnableCustomLog"));
+                }
+                if (override.hasKey("logEnableWebViewLog") && !override.isNull("logEnableWebViewLog")) {
+                    configBean.setLogEnableWebViewLog(override.getBoolean("logEnableWebViewLog"));
                 }
                 if (override.hasKey("logEnableConsoleLog") && !override.isNull("logEnableConsoleLog")) {
                     configBean.setLogEnableConsoleLog(override.getBoolean("logEnableConsoleLog"));
@@ -367,6 +388,19 @@ public class FTMobileImpl {
         return convertedFilters;
     }
 
+    static FTSDKConfig buildSDKConfig(@Nullable String datakitUrl,
+                                      @Nullable String datawayUrl,
+                                      @Nullable String clientToken) {
+        if (datakitUrl != null && datakitUrl.length() > 0) {
+            return FTSDKConfig.builder(datakitUrl);
+        }
+        if (datawayUrl != null && datawayUrl.length() > 0
+            && clientToken != null && clientToken.length() > 0) {
+            return FTSDKConfig.builder(datawayUrl, clientToken);
+        }
+        return FTSDKConfig.builder();
+    }
+
     public void sdkConfig(ReadableMap context, Promise promise) {
         Map<String, Object> map = context.toHashMap();
         String datakitUrl = (String) map.get("datakitUrl");
@@ -393,9 +427,12 @@ public class FTMobileImpl {
         this.remoteConfigOverrideRules = context.hasKey("remoteConfigOverrideRules")
             ? context.getArray("remoteConfigOverrideRules") : null;
 
-        FTSDKConfig sdkConfig = (datakitUrl != null)
-            ? FTSDKConfig.builder(datakitUrl)
-            : FTSDKConfig.builder(datawayUrl, cliToken);
+        FTSDKConfig sdkConfig = buildSDKConfig(datakitUrl, datawayUrl, cliToken);
+
+        if (map.containsKey("allowWebViewHost")) {
+            List<String> hosts = (List<String>) map.get("allowWebViewHost");
+            sdkConfig.setAllowWebViewHost(hosts == null ? null : hosts.toArray(new String[0]));
+        }
 
         if (env != null) {
             EnvType envType;
@@ -520,6 +557,11 @@ public class FTMobileImpl {
       }
         FTSdk.install(sdkConfig);
 //        LogUtils.d("configCheck","sdkConfig:"+new Gson().toJson(sdkConfig));
+        promise.resolve(null);
+    }
+
+    public void resetVisitorId(Promise promise) {
+        FTSdk.resetVisitorId();
         promise.resolve(null);
     }
 

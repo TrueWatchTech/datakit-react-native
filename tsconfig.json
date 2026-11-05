@@ -7,6 +7,12 @@
       ],
       "@truewatchtech/react-native-session-replay": [
         "./packages/react-native-session-replay/src/index"
+      ],
+      "@truewatchtech/mobile-react-navigation": [
+        "./packages/react-navigation/src/index"
+      ],
+      "@truewatchtech/mobile-react-native-navigation": [
+        "./packages/react-native-navigation/src/index"
       ]
     },
     "allowUnreachableCode": false,

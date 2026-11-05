@@ -19,6 +19,8 @@
     "@react-navigation/drawer": "^6.3.1",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
+    "@truewatchtech/mobile-react-native-navigation": "workspace:packages/react-native-navigation",
+    "@truewatchtech/mobile-react-navigation": "workspace:packages/react-navigation",
     "@truewatchtech/react-native-mobile": "workspace:packages/react-native-mobile",
     "@truewatchtech/react-native-session-replay": "workspace:packages/react-native-session-replay",
     "react": "18.2.0",

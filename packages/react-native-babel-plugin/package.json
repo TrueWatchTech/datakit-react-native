@@ -1,6 +1,6 @@
 {
   "name": "@truewatchtech/react-native-mobile-babel-plugin",
-  "version": "0.4.3-alpha.2",
+  "version": "0.4.3",
   "description": "Babel plugin for automatic TrueWatch React Native RUM action naming.",
   "keywords": [
     "babel",

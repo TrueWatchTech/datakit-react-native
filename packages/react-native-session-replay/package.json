@@ -1,6 +1,6 @@
 {
   "name": "@truewatchtech/react-native-session-replay",
-  "version": "0.4.3-alpha.2",
+  "version": "0.4.3",
   "description": "Session Replay package for TrueWatch React Native SDK",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -48,7 +48,7 @@
   "author": "Brandon <brandonfaustine@gmail.com> (https://github.com/Br4ndonZhang)",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/TrueWatchTech/datakit-react-native/issues"
+    "url": "https://github.com/TrueWatchTech/datakit-react-native.git/issues"
   },
   "homepage": "https://github.com/TrueWatchTech/datakit-react-native.git#readme",
   "publishConfig": {
