@@ -1,24 +1,22 @@
 #!/usr/bin/env python3
 """Run RN config mapping against real target native configuration implementations."""
+import argparse
 from pathlib import Path
 import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[4]
-CACHE = Path('/private/tmp/native-adapter-cache')
 
-def native(platform, path):
-    repo = CACHE / ('ssh_git_gitlab.truewatchyun.com_40022_cma_ft-sdk-' + platform + '.git')
-    tag = '1.6.8' if platform == 'ios' else 'agent_1.7.6'
-    return subprocess.check_output(['git', '--git-dir=' + str(repo), 'show', tag + ':' + path], text=True)
+def native(repo, tag, path):
+    return subprocess.check_output(['git', '-C', str(repo), 'show', tag + ':' + path], text=True)
 
-def ios(tmp):
+def ios(tmp, repo):
     for name, path in [
         ('FTVisitorIDConfig.h', 'Sources/Agent/Shared/Public/FTVisitorIDConfig.h'),
         ('FTVisitorIDConfig+Private.h', 'Sources/Agent/Config/FTVisitorIDConfig+Private.h'),
         ('FTVisitorIDConfig.m', 'Sources/Agent/Config/FTVisitorIDConfig.m'),
     ]:
-        (tmp / name).write_text(native('ios', path))
+        (tmp / name).write_text(native(repo, '1.6.9', path))
     (tmp / 'FTInnerLog.h').write_text('#define FTInnerLogWarning(...)\n')
     production = (ROOT / 'packages/react-native-mobile/ios/FTReactNativeRUM.mm').read_text()
     mapper = production[production.index('static FTVisitorIDConfig *FTVisitorIdConfigFromDictionary'):production.index('@interface FTReactNativeRUM')]
@@ -53,8 +51,8 @@ int main() { @autoreleasepool {
     subprocess.run(['clang++', '-fobjc-arc', '-framework', 'Foundation', '-I', str(tmp), str(tmp / 'main.mm'), str(tmp / 'FTVisitorIDConfig.m'), '-o', str(tmp / 'test')], check=True)
     subprocess.run([str(tmp / 'test')], check=True)
 
-def android(tmp):
-    (tmp / 'FTVisitorIdConfig.java').write_text(native('android', 'ft-sdk/src/main/java/com/ft/sdk/FTVisitorIdConfig.java'))
+def android(tmp, repo):
+    (tmp / 'FTVisitorIdConfig.java').write_text(native(repo, 'agent_1.7.7-beta02', 'ft-sdk/src/main/java/com/ft/sdk/FTVisitorIdConfig.java'))
     (tmp / 'VisitorIdConfigMapper.java').write_text((ROOT / 'packages/react-native-mobile/android/src/main/java/com/ft/sdk/reactnative/VisitorIdConfigMapper.java').read_text())
     (tmp / 'LogUtils.java').write_text('package com.ft.sdk.garble.utils; public class LogUtils { public static void w(String a, String b) {} }')
     (tmp / 'Test.java').write_text(r'''
@@ -90,8 +88,12 @@ public class Test {
     subprocess.run(['java', '-cp', str(tmp / 'classes'), 'com.ft.sdk.reactnative.Test'], check=True)
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--ios-sdk-repo', type=Path, required=True)
+    parser.add_argument('--android-sdk-repo', type=Path, required=True)
+    args = parser.parse_args()
     with tempfile.TemporaryDirectory(prefix='rn-visitor-id-') as root:
-        for name, run in [('ios', ios), ('android', android)]:
+        for name, run, repo in [('ios', ios, args.ios_sdk_repo), ('android', android, args.android_sdk_repo)]:
             directory = Path(root) / name
             directory.mkdir()
-            run(directory)
+            run(directory, repo)

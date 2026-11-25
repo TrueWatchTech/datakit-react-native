@@ -133,5 +133,5 @@ int main(void) { @autoreleasepool {
   assert(lastMetrics.duration.longLongValue == 25000000 && lastMetrics.resource_dns.longLongValue == 1200000);
   assert(lastMetrics.fetchStartNsTimeInterval == 0 && lastMetrics.fetchEndNsTimeInterval == 0);
   assert(!lastContent.webSocketHandshake);
-  puts("PASS: production WebSocket conversion + TrueWatchSDK 1.6.8 interval/duration selection");
+  puts("PASS: production WebSocket conversion + TrueWatchSDK 1.6.9 interval/duration selection");
 } return 0; }

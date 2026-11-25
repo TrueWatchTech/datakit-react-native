@@ -1,6 +1,17 @@
 import { FTReactNativeRUM } from '../../src';
 import type * as MobileSDK from '../../src';
 
+export function checkPublicLaunchPrewarmConfig(): void {
+  const config: MobileSDK.FTRUMConfig = {
+    androidAppId: 'android-app-id',
+    iOSAppId: 'ios-app-id',
+    launchPrewarmInterval: 1500,
+  };
+  // @ts-expect-error The prewarm interval is a number in milliseconds.
+  config.launchPrewarmInterval = '1500';
+  void config;
+}
+
 // Compile-only API contract; this function is never executed.
 export function checkPublicViewAPI(): void {
   void FTReactNativeRUM.onCreateView('Home', 25000000);

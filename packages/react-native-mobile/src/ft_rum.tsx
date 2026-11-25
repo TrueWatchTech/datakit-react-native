@@ -90,7 +90,9 @@ export enum IOSCrashMonitoringType {
  * @param enableLongTask whether to collect React Native JavaScript LongTasks, default false
  * @param longTaskThresholdMs set the threshold for collecting React Native JavaScript LongTasks, unit ms. Defaults to 100 and is clamped to [100, 5000]
  * @param enableNativeUserAction whether to start Native Action tracking, Button click events, recommended to disable for pure react-native apps
+ * @param launchPrewarmInterval iOS startup prewarm inference threshold in integer milliseconds, default 0 (disabled). Requires iOS TrueWatchSDK 1.6.9 and enableNativeUserAction.
  * @param enableNativeUserView whether to start Native View auto tracking, recommended to disable for pure react-native apps
+ * @param enableNativeUserViewLoadingTime iOS only: automatically collect native View loading time when enableNativeUserView is true. Default true. Requires iOS TrueWatchSDK 1.6.9.
  * @param enableNativeUserResource whether to automatically collect react-native Resource
  * @param enableIOSWebSocketResource whether to collect iOS WebSocket opening handshakes as RUM Resources. Defaults to false.
  * Independent of enableNativeUserResource. Android native WebSocket collection is unaffected.
@@ -138,7 +140,24 @@ export interface FTRUMConfig {
   enableLongTask?: boolean;
   longTaskThresholdMs?: number;
   enableNativeUserAction?: boolean;
+  /**
+   * iOS only (TrueWatchSDK 1.6.9): startup prewarm inference threshold in milliseconds.
+   * Default 0 disables duration-based inference; system-detected prewarming still applies.
+   * Applies to automatic launch Actions when enableNativeUserAction is true.
+   * Positive values can adjust the launch Action timestamp and duration.
+   * Accepts integers from 0 through 9223372036854; invalid values are ignored.
+   * Configure before starting RUM. Ignored on Android.
+   */
+  launchPrewarmInterval?: number;
   enableNativeUserView?: boolean;
+  /**
+   * iOS only (TrueWatchSDK 1.6.9): automatic native View loading-time collection.
+   * Default true; effective only when enableNativeUserView is true.
+   * False preserves native View tracking. Configure before starting RUM.
+   * Does not affect React Native navigation tracking or manually reported timings.
+   * Ignored on Android.
+   */
+  enableNativeUserViewLoadingTime?: boolean;
   enableNativeUserResource?: boolean;
   enableIOSWebSocketResource?: boolean;
   enableResourceHostIP?: boolean;

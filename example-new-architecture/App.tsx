@@ -103,6 +103,7 @@ function App(): React.JSX.Element {
             iOSAppId,
             sampleRate: 1,
             enableAutoTrackUserAction: true,
+            enableNativeUserAction: true,
             enableAutoTrackError: true,
             enableLongTask: true,
             longTaskThresholdMs: 200,

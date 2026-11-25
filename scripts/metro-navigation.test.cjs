@@ -15,9 +15,8 @@ const createDefaultContext = appRequire(
 const { transformSync } = appRequire('@babel/core');
 const config = require('../example/metro.config');
 
-// Use Metro's real resolver and installed packages, honoring the app's block list.
-function resolveNavigation(originModulePath, platform) {
-  const resolver = config.resolver;
+// Use Metro's resolver with the example's configuration and installed packages.
+function resolveModule(resolver, originModulePath, moduleName, platform) {
   const lookup = (filename) => {
     const blocked = [resolver.blockList].flat().filter(Boolean);
     if (blocked.some((pattern) => pattern.test(filename)))
@@ -66,7 +65,7 @@ function resolveNavigation(originModulePath, platform) {
     },
     unstable_logWarning: (message) => assert.fail(message),
   });
-  return resolve(context, 'react-native-navigation', platform).filePath;
+  return resolve(context, moduleName, platform).filePath;
 }
 
 function loadViewRegistry() {
@@ -87,15 +86,19 @@ function loadViewRegistry() {
 
 for (const platform of ['ios', 'android']) {
   test(`${platform}: app and workspace adapter register RNNModalViewManager once`, () => {
-    const appEntry = resolveNavigation(
+    const appEntry = resolveModule(
+      config.resolver,
       path.join(appRoot, 'src/RNNApp.tsx'),
+      'react-native-navigation',
       platform
     );
-    const adapterEntry = resolveNavigation(
+    const adapterEntry = resolveModule(
+      config.resolver,
       path.join(
         root,
         'packages/react-native-navigation/src/FTRumReactNativeNavigationTracking.ts'
       ),
+      'react-native-navigation',
       platform
     );
     const registry = loadViewRegistry();
@@ -130,5 +133,29 @@ for (const platform of ['ios', 'android']) {
     const expected = appRequire.resolve('react-native-navigation');
     assert.equal(appEntry, expected);
     assert.equal(adapterEntry, expected);
+  });
+}
+
+for (const directory of ['example', 'example-new-architecture']) {
+  test(`${directory}: Session Replay uses the app's React and native view registry`, () => {
+    const exampleRoot = path.join(root, directory);
+    const { resolver } = require(path.join(exampleRoot, 'metro.config.js'));
+    const origin = path.join(
+      root,
+      'packages/react-native-session-replay/src/index.tsx'
+    );
+    const exampleRequire = createRequire(path.join(exampleRoot, 'package.json'));
+    for (const name of [
+      'react',
+      'react-native',
+      'react-native/Libraries/Renderer/shims/ReactNativeViewConfigRegistry',
+    ]) {
+      for (const platform of ['android', 'ios']) {
+        assert.equal(
+          resolveModule(resolver, origin, name, platform),
+          exampleRequire.resolve(name)
+        );
+      }
+    }
   });
 }

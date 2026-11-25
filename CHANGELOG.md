@@ -2,6 +2,14 @@
 > * [Android](https://github.com/TrueWatchTech/datakit-android/blob/dev/ft-sdk/CHANGELOG.md)
 > * [iOS ](https://github.com/TrueWatchTech/datakit-ios/blob/develop/CHANGELOG.md)
 
+# 0.4.4-beta.1
+
+* Upgraded Android dependencies to `ft-sdk 1.7.7-beta02` and `ft-native 1.1.5-beta01`, and the iOS dependency to `TrueWatchSDK 1.6.9`.
+* Android RUM now reports warm launches as `launch_warm` and uses the current process's foreground state for launch Actions, Long Tasks, and watchdog ANRs.
+* Android stores reusable native crash-report reserves in the app cache. Completed reports and active ANR traces stay in the existing files directory.
+* Added `FTRUMConfig.launchPrewarmInterval` for iOS `TrueWatchSDK 1.6.9` to configure the startup prewarm inference threshold in milliseconds. Defaults to `0`, preserving disabled duration-based inference.
+* Added `FTRUMConfig.enableNativeUserViewLoadingTime` for iOS `TrueWatchSDK 1.6.9` to disable automatic native View loading-time collection while preserving View tracking. Defaults to enabled and takes effect when `enableNativeUserView` is enabled.
+
 # 0.4.3
 
 * Upgraded compatibility to iOS `TrueWatchSDK 1.6.8` and Android `ft-sdk 1.7.6`, `ft-plugin 1.3.8`, `ft-session-replay 0.1.9`, and `ft-native 1.1.4`.

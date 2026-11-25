@@ -266,11 +266,23 @@ RCT_REMAP_METHOD(addResource,
   } else if ([context.allKeys containsObject:@"sessionOnErrorSampleRate"]) {
     rumConfig.sessionOnErrorSamplingRate = [RCTConvert double:context[@"sessionOnErrorSampleRate"]] * 100;
   }
+  id prewarmValue = context[@"launchPrewarmInterval"];
+  if ([prewarmValue isKindOfClass:NSNumber.class]) {
+    double interval = [prewarmValue doubleValue];
+    // Validate before converting to NSInteger; native timing converts milliseconds to nanoseconds.
+    if (isfinite(interval) && interval >= 0 && floor(interval) == interval &&
+        interval <= INT64_MAX / 1000000ULL) {
+      rumConfig.launchPrewarmInterval = (NSInteger)interval;
+    }
+  }
   if ([context.allKeys containsObject:@"enableNativeUserAction"]) {
     rumConfig.enableTraceUserAction = [RCTConvert BOOL:context[@"enableNativeUserAction"]];
   }
   if ([context.allKeys containsObject:@"enableNativeUserView"]) {
     rumConfig.enableTraceUserView = [RCTConvert BOOL:context[@"enableNativeUserView"]];
+  }
+  if ([context.allKeys containsObject:@"enableNativeUserViewLoadingTime"]) {
+    rumConfig.enableTraceUserViewLoadingTime = [RCTConvert BOOL:context[@"enableNativeUserViewLoadingTime"]];
   }
   if ([context.allKeys containsObject:@"enableNativeUserResource"]) {
     rumConfig.enableTraceUserResource = [RCTConvert BOOL:context[@"enableNativeUserResource"]];

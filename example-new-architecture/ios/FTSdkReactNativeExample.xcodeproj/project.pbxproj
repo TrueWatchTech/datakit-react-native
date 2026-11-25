@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* FTSdkReactNativeExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* FTSdkReactNativeExampleTests.m */; };
+		0A671D9C41CC4CD0A96F5901 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B98322E90F54913A54554E6 /* SceneDelegate.m */; };
 		0C80B921A6F3F58F76C31292 /* libPods-FTSdkReactNativeExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-FTSdkReactNativeExample.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -44,8 +45,10 @@
 		5709B34CF0A7D63546082F79 /* Pods-FTSdkReactNativeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FTSdkReactNativeExample.release.xcconfig"; path = "Target Support Files/Pods-FTSdkReactNativeExample/Pods-FTSdkReactNativeExample.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-FTSdkReactNativeExample-FTSdkReactNativeExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FTSdkReactNativeExample-FTSdkReactNativeExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-FTSdkReactNativeExample-FTSdkReactNativeExampleTests/Pods-FTSdkReactNativeExample-FTSdkReactNativeExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-FTSdkReactNativeExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FTSdkReactNativeExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A39151E3F5B4C9D8B0730A0 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SceneDelegate.h; path = FTSdkReactNativeExample/SceneDelegate.h; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = FTSdkReactNativeExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-FTSdkReactNativeExample-FTSdkReactNativeExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FTSdkReactNativeExample-FTSdkReactNativeExampleTests.release.xcconfig"; path = "Target Support Files/Pods-FTSdkReactNativeExample-FTSdkReactNativeExampleTests/Pods-FTSdkReactNativeExample-FTSdkReactNativeExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		8B98322E90F54913A54554E6 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SceneDelegate.m; path = FTSdkReactNativeExample/SceneDelegate.m; sourceTree = "<group>"; };
 		A17B5E122F51100000A00002 /* FTJSLongTaskMonitorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FTJSLongTaskMonitorTests.m; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -92,7 +95,9 @@
 			isa = PBXGroup;
 			children = (
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
+				7A39151E3F5B4C9D8B0730A0 /* SceneDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
+				8B98322E90F54913A54554E6 /* SceneDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
@@ -401,6 +406,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				0A671D9C41CC4CD0A96F5901 /* SceneDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

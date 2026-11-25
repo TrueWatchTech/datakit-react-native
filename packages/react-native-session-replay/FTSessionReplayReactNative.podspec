@@ -17,8 +17,8 @@ Pod::Spec.new do |s|
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
   s.dependency "React-Core"
-  s.dependency "TrueWatchSDK", "1.6.8"
-  s.dependency "TrueWatchSDK/SessionReplay", "1.6.8"
+  s.dependency "TrueWatchSDK", "1.6.9"
+  s.dependency "TrueWatchSDK/SessionReplay", "1.6.9"
 
   xcconfig = {
     "HEADER_SEARCH_PATHS" => "$(inherited) " +

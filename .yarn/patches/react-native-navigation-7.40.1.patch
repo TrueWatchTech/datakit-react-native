@@ -1,0 +1,17 @@
+diff --git a/lib/android/app/src/main/java/com/reactnativenavigation/utils/ReactTypefaceUtils.java b/lib/android/app/src/main/java/com/reactnativenavigation/utils/ReactTypefaceUtils.java
+--- a/lib/android/app/src/main/java/com/reactnativenavigation/utils/ReactTypefaceUtils.java
++++ b/lib/android/app/src/main/java/com/reactnativenavigation/utils/ReactTypefaceUtils.java
+@@ -21,3 +21,2 @@
+ import com.facebook.react.views.text.ReactFontManager;
+-import com.facebook.react.views.text.ReactTextShadowNode;
+ import java.util.ArrayList;
+@@ -98,3 +97,3 @@
+     if ((weight == Typeface.BOLD)
+-        || ((oldStyle & Typeface.BOLD) != 0 && weight == ReactTextShadowNode.UNSET)) {
++        || ((oldStyle & Typeface.BOLD) != 0 && weight == UNSET)) {
+       want |= Typeface.BOLD;
+@@ -103,3 +102,3 @@
+     if ((style == Typeface.ITALIC)
+-        || ((oldStyle & Typeface.ITALIC) != 0 && style == ReactTextShadowNode.UNSET)) {
++        || ((oldStyle & Typeface.ITALIC) != 0 && style == UNSET)) {
+       want |= Typeface.ITALIC;

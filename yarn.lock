@@ -4685,7 +4685,7 @@ __metadata:
   dependencies:
     react-native-navigation: 7.40.1
   peerDependencies:
-    "@truewatchtech/react-native-mobile": ^0.4.3
+    "@truewatchtech/react-native-mobile": ^0.4.4-beta.1
     react: ">=16.13.1"
     react-native: ">=0.63.4 <1.0"
     react-native-navigation: ^7.5.0
@@ -4701,7 +4701,7 @@ __metadata:
     react-native-safe-area-context: ^3.3.2
     react-native-screens: ^3.0.0
   peerDependencies:
-    "@truewatchtech/react-native-mobile": ^0.4.3
+    "@truewatchtech/react-native-mobile": ^0.4.4-beta.1
     react: ">=16.13.1"
     react-native: ">=0.63.4 <1.0"
   languageName: unknown
@@ -4717,7 +4717,7 @@ __metadata:
     "@babel/plugin-transform-react-jsx": ^7.25.2
   peerDependencies:
     "@babel/core": ^7.0.0
-    "@truewatchtech/react-native-mobile": ^0.4.3-0
+    "@truewatchtech/react-native-mobile": ^0.4.3-0 || ^0.4.4-beta.1
     react: ">=16.13.1"
     react-native: ">=0.63.4 <1.0"
   languageName: unknown
@@ -15836,6 +15836,28 @@ __metadata:
   bin:
     rnn-link: autolink/postlink/run.js
   checksum: 3c4425d9f89fcb055e6b40c2bc92eb7eb9f5672b0b8914262413d66209ed5f789d45032b9ac74c87fb0a7bb1f7aeeebbe306949ec3b932f6bbfdf04c46d12ef6
+  languageName: node
+  linkType: hard
+
+"react-native-navigation@patch:react-native-navigation@npm%3A7.40.1#./.yarn/patches/react-native-navigation-7.40.1.patch::locator=ft-sdk-react-native%40workspace%3A.":
+  version: 7.40.1
+  resolution: "react-native-navigation@patch:react-native-navigation@npm%3A7.40.1#./.yarn/patches/react-native-navigation-7.40.1.patch::version=7.40.1&hash=e3cd6a&locator=ft-sdk-react-native%40workspace%3A."
+  dependencies:
+    hoist-non-react-statics: 3.x.x
+    lodash: 4.17.x
+    prop-types: 15.x.x
+    react-lifecycles-compat: 2.0.0
+    tslib: 1.9.3
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    remx: "*"
+  peerDependenciesMeta:
+    remx:
+      optional: true
+  bin:
+    rnn-link: autolink/postlink/run.js
+  checksum: ff764e93bf63850d895476f96f360d0061b2560806c67f3350dc9c8c635d9ede93fb70b7a882177e68cdd40a9f3367ecb823f40fe77c2bf59a3e15aa26fe3d90
   languageName: node
   linkType: hard
 

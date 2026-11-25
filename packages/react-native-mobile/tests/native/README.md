@@ -1,5 +1,19 @@
 # Native WebSocket regression tests
 
+Config bridge checks:
+
+```sh
+python3 packages/react-native-mobile/tests/native/run-config-bridges.py
+```
+
+Compiles production bridge code with SDK doubles. The iOS checks include explicit
+true/false and omitted `enableNativeUserViewLoadingTime` with native View tracking
+enabled and disabled, preserving the SDK default and independent View tracking.
+They also verify `launchPrewarmInterval` forwards exact integer milliseconds
+(including zero, 1500, values above Int32, and the native maximum 9223372036854),
+keeps the default zero when omitted, and ignores negative, fractional, non-finite,
+out-of-range and non-numeric values.
+
 Run the deterministic metadata, Resource normalization, lifecycle and response
 snapshot tests on macOS with Xcode command-line tools:
 
@@ -39,7 +53,7 @@ WebSocket capture-boundary and native duration checks:
 python3 packages/react-native-mobile/tests/native/run-websocket-timing.py
 ```
 
-Requires TrueWatchSDK 1.6.8 sources installed in `example/ios/Pods`. The runner compiles
+Requires TrueWatchSDK 1.6.9 sources installed in `example/ios/Pods`. The runner compiles
 the production Resource normalizer and bridge conversion against the installed
 SDK's model headers, and extracts its actual interval-selection, fetch-interval,
 and final duration calculation code. Platform conversion/reporting dependencies
@@ -55,10 +69,12 @@ work, duplicate/late events, wall-clock corrections, and unavailable clocks.
 Visitor ID mapping checks:
 
 ```sh
-python3 packages/react-native-mobile/tests/native/run-visitor-id-config.py
+python3 packages/react-native-mobile/tests/native/run-visitor-id-config.py \
+  --ios-sdk-repo /path/to/tw-sdk-ios \
+  --android-sdk-repo /path/to/tw-sdk-android
 ```
 
-This compiles the production iOS mapping function and Android mapper against the real native config implementations from `/private/tmp/native-adapter-cache` (iOS `1.6.8`, Android `agent_1.7.6`). It verifies 24-hour defaults, a 0.5-hour TTL (1,800,000 ms on Android), OR matching, origin restrictions, WebSocket URL exclusion, missing config and invalid regex handling. Native ID persistence and request lifetime logic are delegated to the SDK; this is not a live network or device test.
+This compiles the production iOS mapping function and Android mapper against the real native config implementations from the specified TrueWatch SDK repositories (iOS `1.6.9`, Android `agent_1.7.7-beta02`). It verifies 24-hour defaults, a 0.5-hour TTL (1,800,000 ms on Android), OR matching, origin restrictions, WebSocket URL exclusion, missing config and invalid regex handling. Native ID persistence and request lifetime logic are delegated to the SDK; this is not a live network or device test.
 
 `run-websocket-bridge.py` also checks the RUM and Mobile bridges against freshly generated old/new architecture protocols, including `resetVisitorId`.
 
@@ -87,12 +103,12 @@ Shared WebView host configuration checks:
 
 ```sh
 python3 packages/react-native-mobile/tests/native/run-webview-host-config.py \
-  --android-sdk-repo /path/to/ft-sdk-android
+  --android-sdk-repo /path/to/tw-sdk-android
 ```
 
 Requires Xcode command-line tools, a JDK supporting `javac --release 8`, installed
-TrueWatchSDK 1.6.8 sources in `example/ios/Pods` (or `--ios-sdk-sources`), and an Android
-SDK checkout containing the `agent_1.7.6` tag. It compiles the production RN host
+TrueWatchSDK 1.6.9 sources in `example/ios/Pods` (or `--ios-sdk-sources`), and an Android
+SDK checkout containing the `agent_1.7.7-beta02` tag. It compiles the production RN host
 mapping blocks with the native SDK's host setters and selection policy. It checks
 omitted, null, empty and explicit host lists, legacy RUM fallback, base configuration
 precedence, operation without RUM, and remote configuration precedence. Android

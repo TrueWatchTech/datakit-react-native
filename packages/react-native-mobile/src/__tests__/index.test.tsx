@@ -315,6 +315,44 @@ describe('native adapter config forwarding', () => {
   });
 
   it.each([true, false, undefined])(
+    'forwards native View loading-time collection=%s without adding a default',
+    async (enabled) => {
+      const config = {
+        androidAppId: 'android-app-id',
+        iOSAppId: 'ios-app-id',
+        enableNativeUserView: true,
+        ...(enabled === undefined
+          ? {}
+          : { enableNativeUserViewLoadingTime: enabled }),
+      };
+      await FTReactNativeRUM.setConfig(config);
+      expect(mockFTReactNativeRUM.setConfig).toHaveBeenCalledWith({
+        ...config,
+        enableLongTask: false,
+        longTaskThresholdMs: 100,
+      });
+    }
+  );
+
+  it.each([0, 1500, 2147483648, 9223372036854, undefined])(
+    'forwards launchPrewarmInterval=%s in milliseconds without adding a default',
+    async (interval) => {
+      const config = {
+        androidAppId: 'android-app-id',
+        iOSAppId: 'ios-app-id',
+        enableNativeUserAction: true,
+        ...(interval === undefined ? {} : { launchPrewarmInterval: interval }),
+      };
+      await FTReactNativeRUM.setConfig(config);
+      expect(mockFTReactNativeRUM.setConfig).toHaveBeenCalledWith({
+        ...config,
+        enableLongTask: false,
+        longTaskThresholdMs: 100,
+      });
+    }
+  );
+
+  it.each([true, false, undefined])(
     'enables iOS WebSocket tracking independently when native resource collection is %s',
     async (nativeResource) => {
       const startTracking = jest

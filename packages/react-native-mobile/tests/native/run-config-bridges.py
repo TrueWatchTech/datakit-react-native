@@ -27,6 +27,7 @@ def run_ios(tmp):
     log = method('packages/react-native-mobile/ios/FTReactNativeLog.mm', '- (void)logConfig:')
     replay = method('packages/react-native-session-replay/ios/FTReactNativeSessionReplay.mm', '- (void)sessionReplayConfig:')
     rum_sampling = sampling_region('packages/react-native-mobile/ios/FTReactNativeRUM.mm', '  if ([context.allKeys containsObject:@"sessionSamplingRate"])', '  if ([context.allKeys containsObject:@"enableNativeUserAction"])')
+    rum_view_tracking = sampling_region('packages/react-native-mobile/ios/FTReactNativeRUM.mm', '  if ([context.allKeys containsObject:@"enableNativeUserView"])', '  if ([context.allKeys containsObject:@"enableNativeUserResource"])')
     trace_sampling = sampling_region('packages/react-native-mobile/ios/FTReactNativeTrace.mm', '  if ([context.allKeys containsObject:@"traceSamplingRate"])', '  if ([context.allKeys containsObject:@"traceType"])')
     source = r'''
 #import <Foundation/Foundation.h>
@@ -56,9 +57,11 @@ enum { FTTouchPrivacyLevelShow, FTTouchPrivacyLevelHide,
 @end
 @interface SamplingConfig : NSObject
 @property float sessionSamplingRate, sessionOnErrorSamplingRate, traceSamplingRate;
+@property BOOL enableTraceUserView, enableTraceUserViewLoadingTime;
+@property NSInteger launchPrewarmInterval;
 @end
 @implementation SamplingConfig
-- (instancetype)init { if ((self = [super init])) { _sessionSamplingRate = 100; _traceSamplingRate = 100; } return self; }
+- (instancetype)init { if ((self = [super init])) { _sessionSamplingRate = 100; _traceSamplingRate = 100; _enableTraceUserViewLoadingTime = YES; } return self; }
 @end
 @interface FTLoggerConfig : NSObject
 @property float logSamplingRate;
@@ -113,7 +116,7 @@ static FTSessionReplayConfig *lastReplay;
 @interface ConfigBridge : NSObject { TestBridge *_bridge; }
 @end
 @implementation ConfigBridge
-''' + log + '\n' + replay + '\n- (void)rumSampling:(NSDictionary *)context config:(SamplingConfig *)rumConfig {\n' + rum_sampling + '}\n- (void)traceSampling:(NSDictionary *)context config:(SamplingConfig *)trace {\n' + trace_sampling + '}\n' + r'''
+''' + log + '\n' + replay + '\n- (void)rumSampling:(NSDictionary *)context config:(SamplingConfig *)rumConfig {\n' + rum_sampling + '}\n- (void)rumViewTracking:(NSDictionary *)context config:(SamplingConfig *)rumConfig {\n' + rum_view_tracking + '}\n- (void)traceSampling:(NSDictionary *)context config:(SamplingConfig *)trace {\n' + trace_sampling + '}\n' + r'''
 @end
 static int failures;
 static void check(double actual, double expected) {
@@ -123,6 +126,36 @@ static void check(double actual, double expected) {
 }
 int main() { @autoreleasepool {
   ConfigBridge *bridge = [ConfigBridge new];
+  for (NSNumber *interval in @[@0, @1, @1500, @2147483648LL, @9223372036854LL]) {
+    SamplingConfig *config = [SamplingConfig new];
+    [bridge rumSampling:@{@"launchPrewarmInterval": interval} config:config];
+    if (config.launchPrewarmInterval != interval.longLongValue) {
+      NSLog(@"Expected launchPrewarmInterval %@ ms, got %ld", interval, (long)config.launchPrewarmInterval);
+      failures++;
+    }
+  }
+  SamplingConfig *defaultPrewarm = [SamplingConfig new];
+  [bridge rumSampling:@{} config:defaultPrewarm];
+  check(defaultPrewarm.launchPrewarmInterval, 0);
+  for (id interval in @[@(-1), @1500.5, @(NAN), @(INFINITY), @9223372036855LL, @"1500", [NSNull null]]) {
+    SamplingConfig *config = [SamplingConfig new];
+    [bridge rumSampling:@{@"launchPrewarmInterval": interval} config:config];
+    check(config.launchPrewarmInterval, 0);
+  }
+  for (NSNumber *trackView in @[@YES, @NO]) {
+    for (id loadingTime in @[@YES, @NO, [NSNull null]]) {
+      SamplingConfig *config = [SamplingConfig new];
+      NSMutableDictionary *context = [@{@"enableNativeUserView": trackView} mutableCopy];
+      BOOL expectedLoadingTime = YES;
+      if (loadingTime != [NSNull null]) {
+        context[@"enableNativeUserViewLoadingTime"] = loadingTime;
+        expectedLoadingTime = [loadingTime boolValue];
+      }
+      [bridge rumViewTracking:context config:config];
+      check(config.enableTraceUserViewLoadingTime, expectedLoadingTime);
+      check(config.enableTraceUserView, trackView.boolValue);
+    }
+  }
   __block int resolved = 0;
   RCTPromiseResolveBlock resolve = ^(id v) { resolved++; };
   RCTPromiseRejectBlock reject = ^(NSString *c, NSString *m, NSError *e) { exit(2); };
@@ -175,7 +208,7 @@ int main() { @autoreleasepool {
   config = [SamplingConfig new]; [bridge rumSampling:@{} config:config]; [bridge traceSampling:@{} config:config];
   check(config.sessionSamplingRate, 100); check(config.sessionOnErrorSamplingRate, 0); check(config.traceSamplingRate, 100);
   if (failures) return 1;
-  puts("iOS config bridge: 0, 0.1, 12.5, 100 percent; WebView true/false/omitted; defaults PASS");
+  puts("iOS config bridge: percentages; WebView and View loading switches; launch prewarm milliseconds, bounds and defaults PASS");
 } }
 '''
     file = tmp / 'config-tests.mm'

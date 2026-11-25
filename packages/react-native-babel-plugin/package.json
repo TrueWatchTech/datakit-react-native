@@ -1,6 +1,6 @@
 {
   "name": "@truewatchtech/react-native-mobile-babel-plugin",
-  "version": "0.4.3",
+  "version": "0.4.4-beta.1",
   "description": "Babel plugin for automatic TrueWatch React Native RUM action naming.",
   "keywords": [
     "babel",
@@ -35,7 +35,7 @@
   },
   "peerDependencies": {
     "@babel/core": "^7.0.0",
-    "@truewatchtech/react-native-mobile": "^0.4.3-0",
+    "@truewatchtech/react-native-mobile": "^0.4.3-0 || ^0.4.4-beta.1",
     "react": ">=16.13.1",
     "react-native": ">=0.63.4 <1.0"
   },

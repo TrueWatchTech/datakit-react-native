@@ -185,8 +185,8 @@ repositories {
 dependencies {
   // noinspection GradleDynamicVersion
   implementation 'com.facebook.react:react-native:+'
-  implementation 'com.truewatch.ft.mobile.sdk.tracker.agent:ft-sdk:1.7.6'
-  implementation 'com.truewatch.ft.mobile.sdk.tracker.agent:ft-native:1.1.4'
+  implementation 'com.truewatch.ft.mobile.sdk.tracker.agent:ft-sdk:1.7.7-beta02'
+  implementation 'com.truewatch.ft.mobile.sdk.tracker.agent:ft-native:1.1.5-beta01'
 //   implementation files('../example/android/app/libs/ft-sdk-debug.aar')
 //    implementation files('../example/android/app/libs/ft-session-replay-debug.aar')
 

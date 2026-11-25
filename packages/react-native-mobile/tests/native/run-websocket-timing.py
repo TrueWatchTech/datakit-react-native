@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Exercise production Resource conversion and installed SDK timing selection.
 
-Requires TrueWatchSDK 1.6.8 sources installed in example/ios/Pods. Platform bridges
+Requires TrueWatchSDK 1.6.9 sources installed in example/ios/Pods. Platform bridges
 and the writer are doubles; native timing methods are extracted without changes.
 This checks exact final interval/duration selection, not device upload.
 """
@@ -26,8 +26,8 @@ def method(source, signature):
     return source[start:end]
 
 
-if not re.search(r'  - TrueWatchSDK \(1\.6\.8\):', (PODS / 'Manifest.lock').read_text()):
-    raise SystemExit('Install the pinned TrueWatchSDK 1.6.8 in example/ios first.')
+if not re.search(r'  - TrueWatchSDK \(1\.6\.9\):', (PODS / 'Manifest.lock').read_text()):
+    raise SystemExit('Install the pinned TrueWatchSDK 1.6.9 in example/ios first.')
 handler = (NATIVE / 'FTRUM/RUMCore/FTRUMResourceHandler.m').read_text()
 metrics = (NATIVE / 'BaseUtils/Base/FTResourceMetricsModel.m').read_text()
 duration = re.search(r'NSNumber \*duration = timing.valid.*?;', handler, re.S).group()
