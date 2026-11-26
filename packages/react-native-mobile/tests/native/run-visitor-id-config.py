@@ -52,7 +52,7 @@ int main() { @autoreleasepool {
     subprocess.run([str(tmp / 'test')], check=True)
 
 def android(tmp, repo):
-    (tmp / 'FTVisitorIdConfig.java').write_text(native(repo, 'agent_1.7.7-beta02', 'ft-sdk/src/main/java/com/ft/sdk/FTVisitorIdConfig.java'))
+    (tmp / 'FTVisitorIdConfig.java').write_text(native(repo, 'agent_1.7.7-beta03', 'ft-sdk/src/main/java/com/ft/sdk/FTVisitorIdConfig.java'))
     (tmp / 'VisitorIdConfigMapper.java').write_text((ROOT / 'packages/react-native-mobile/android/src/main/java/com/ft/sdk/reactnative/VisitorIdConfigMapper.java').read_text())
     (tmp / 'LogUtils.java').write_text('package com.ft.sdk.garble.utils; public class LogUtils { public static void w(String a, String b) {} }')
     (tmp / 'Test.java').write_text(r'''

@@ -2,6 +2,10 @@
 > * [Android](https://github.com/TrueWatchTech/datakit-android/blob/dev/ft-sdk/CHANGELOG.md)
 > * [iOS ](https://github.com/TrueWatchTech/datakit-ios/blob/develop/CHANGELOG.md)
 
+# 0.4.4-beta.2
+
+* Upgraded the Android dependency to `ft-sdk 1.7.7-beta03`. Manually reported RUM Actions now record the foreground or background state at the time of the call.
+
 # 0.4.4-beta.1
 
 * Upgraded Android dependencies to `ft-sdk 1.7.7-beta02` and `ft-native 1.1.5-beta01`, and the iOS dependency to `TrueWatchSDK 1.6.9`.

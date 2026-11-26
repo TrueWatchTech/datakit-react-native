@@ -149,7 +149,7 @@ int main() { @autoreleasepool {
 def run_android(tmp, repo):
     def native(path):
         return subprocess.check_output(['git', '-C', str(repo), 'show',
-                                       'agent_1.7.7-beta02:ft-sdk/src/main/java/com/ft/sdk/' + path], text=True)
+                                       'agent_1.7.7-beta03:ft-sdk/src/main/java/com/ft/sdk/' + path], text=True)
 
     base = native('FTSDKConfig.java')
     rum = native('FTRUMConfig.java')
@@ -282,7 +282,7 @@ public class Tests {
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--android-sdk-repo', type=Path, required=True,
-                        help='Android SDK checkout containing agent_1.7.7-beta02')
+                        help='Android SDK checkout containing agent_1.7.7-beta03')
     parser.add_argument('--ios-sdk-sources', type=Path,
                         default=ROOT / 'example/ios/Pods/TrueWatchSDK/Sources')
     args = parser.parse_args()

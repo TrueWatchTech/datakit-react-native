@@ -125,7 +125,7 @@ dependencies {
         implementation jscFlavor
     }
     // gradle dependency for mixed React Native and Android  Project
-    implementation 'com.truewatch.ft.mobile.sdk.tracker.agent:ft-sdk:1.7.7-beta02'
+    implementation 'com.truewatch.ft.mobile.sdk.tracker.agent:ft-sdk:1.7.7-beta03'
     implementation 'com.truewatch.ft.mobile.sdk.tracker.agent:ft-native:1.1.5-beta01'
     implementation 'com.truewatch.ft.mobile.sdk.tracker.agent:ft-session-replay:0.1.9'
     implementation 'com.truewatch.ft.mobile.sdk.tracker.agent:ft-session-replay-material:0.1.9'
