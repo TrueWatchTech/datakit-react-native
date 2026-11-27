@@ -2,6 +2,12 @@
 > * [Android](https://github.com/TrueWatchTech/datakit-android/blob/dev/ft-sdk/CHANGELOG.md)
 > * [iOS ](https://github.com/TrueWatchTech/datakit-ios/blob/develop/CHANGELOG.md)
 
+# 0.4.4
+
+* Updated Android dependencies to `ft-sdk 1.7.7` and `ft-native 1.1.5`, and the iOS dependency to `TrueWatchSDK 1.6.9`.
+* Android distinguishes warm launches (`launch_warm`) from returns to an existing Activity (`launch_hot`). Manual RUM Actions record the process state at the time of the call. Automatic Long Task and watchdog ANR tracking filters stalls that start in the background.
+* Fixed truncated Android native crash stacks, including arm64 frames with signed return addresses. Reusable crash-report reserves now use the app cache. Completed reports and active ANR traces stay in the existing files directory.
+
 # 0.4.4-beta.2
 
 * Upgraded the Android dependency to `ft-sdk 1.7.7-beta03`. Manually reported RUM Actions now record the foreground or background state at the time of the call.

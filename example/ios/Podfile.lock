@@ -3,7 +3,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.74.5)
   - fmt (9.1.0)
-  - FTMobileReactNativeSDK (0.4.4-beta.2):
+  - FTMobileReactNativeSDK (0.4.4):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -25,7 +25,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - TrueWatchSDK (= 1.6.9)
     - Yoga
-  - FTSessionReplayReactNative (0.4.4-beta.2):
+  - FTSessionReplayReactNative (0.4.4):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1643,8 +1643,8 @@ SPEC CHECKSUMS:
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   FBLazyVector: ac12dc084d1c8ec4cc4d7b3cf1b0ebda6dab85af
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
-  FTMobileReactNativeSDK: ba2a5e2a7e73272ededec73da12bcc2c88d33695
-  FTSessionReplayReactNative: e8b5520e0f5cafe766a78c332c684267ebb6edbe
+  FTMobileReactNativeSDK: 8f18753a7a31eb7df0baddeb0f8a1c6495ecf51b
+  FTSessionReplayReactNative: becbc9be1469a0e6ab146c38efa3f56322718414
   glog: fdfdfe5479092de0c4bdbebedd9056951f092c4f
   hermes-engine: 8c1577f3fdb849cbe7729c2e7b5abc4b845e88f8
   HMSegmentedControl: 34c1f54d822d8308e7b24f5d901ec674dfa31352
